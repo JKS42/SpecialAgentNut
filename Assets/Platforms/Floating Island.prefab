@@ -22,15 +22,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.6472
+      value: 1.6296827
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.51
+      value: -11.34
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.5786
+      value: 26.180408
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -71,6 +71,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4638690002822880853}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7892723703621336756}
   m_SourcePrefab: {fileID: 100100000, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
 --- !u!1 &5952573517653311486 stripped
 GameObject:
@@ -99,3 +102,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: a52f1bda6d2ab5548935ca281e764baf, type: 3}
+--- !u!114 &7892723703621336756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952573517653311486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887bf340d42703a40be99f7855ca4dcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingPlatform
+  height: 5
+  platformPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  lerpSpeed: 1
