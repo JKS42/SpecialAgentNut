@@ -15,5 +15,10 @@
       "message": "Congragulations! You have completed the level",
       "icon": "completion_icon"
     },
+    {
+      "title": "Story",
+      "message": "",
+      "icon": "story_icon"
+    }
   ]
 }

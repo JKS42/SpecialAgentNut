@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &335275651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,8 +1636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
   titleText: {fileID: 577111235}
   messageText: {fileID: 1860509803}
-  iconImage: {fileID: 0}
-  fileName: 
+  iconImage: {fileID: 1155436682}
+  fileName: beginner.json
 --- !u!1 &2115414707
 GameObject:
   m_ObjectHideFlags: 0
@@ -1656,7 +1656,7 @@ GameObject:
   - component: {fileID: 2115414715}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

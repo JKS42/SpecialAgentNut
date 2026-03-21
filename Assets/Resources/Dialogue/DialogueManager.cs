@@ -13,11 +13,11 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        LoadDialogue();
+        LoadDialogue(fileName);
         ShowNext();
     }
 
-    void LoadDialogue()
+    void LoadDialogue(string filename)
     {
         TextAsset json = Resources.Load<TextAsset>("Dialogues/" + fileName);
         DialogueData data = JsonUtility.FromJson<DialogueData>(json.text);
@@ -48,5 +48,11 @@ public class DialogueManager : MonoBehaviour
 
         Sprite icon = Resources.Load<Sprite>("Icons/" + item.icon);
         iconImage.sprite = icon;
+    }
+
+    public void StartDialogue(string fileName)
+    {
+        LoadDialogue(fileName);
+        ShowNext();
     }
 }
