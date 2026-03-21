@@ -1,0 +1,19 @@
+{
+  "dialogues": [
+    {
+      "title": "Warning",
+      "message": "Watch out! Moving platforms ahead",
+      "icon": "warning_icon"
+    },
+    {
+      "title": "Checkpoint",
+      "message": "Checkpoint reached!",
+      "icon": "checkpoint_icon"
+    },
+    {
+      "title": "Completion",
+      "message": "Congragulations! You have completed the level",
+      "icon": "completion_icon"
+    },
+  ]
+}
