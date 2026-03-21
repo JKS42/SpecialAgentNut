@@ -1,7 +1,12 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI messageText;
+    public Image iconImage;
     public string fileName;
 
     private DialogueQueue queue;
@@ -38,6 +43,10 @@ public class DialogueManager : MonoBehaviour
 
     void UpdateUI(DialogueItem item)
     {
-        // Set text + icon here
+        titleText.text = item.title;
+        messageText.text = item.message;
+
+        Sprite icon = Resources.Load<Sprite>("Icons/" + item.icon);
+        iconImage.sprite = icon;
     }
 }
