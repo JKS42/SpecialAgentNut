@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    public string fileName;
-    public DialogueManager dialogueManager; // assign in Inspector
+    public string fileName;               
+    public string onlyTitle;              
+    public DialogueManager dialogueManager; 
 
     private bool hasTriggered = false;
 
@@ -14,13 +15,9 @@ public class DialogueTrigger : MonoBehaviour
             hasTriggered = true;
 
             if (dialogueManager != null)
-            {
-                dialogueManager.StartDialogue(fileName);
-            }
+                dialogueManager.StartDialogue(fileName, onlyTitle);
             else
-            {
                 Debug.LogError("DialogueManager not assigned on trigger: " + gameObject.name);
-            }
         }
     }
 }

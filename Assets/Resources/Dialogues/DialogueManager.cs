@@ -1,73 +1,113 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    public Canvas dialogueCanvas;
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI messageText;
     public Image iconImage;
-    public Canvas dialogueCanvas;
-    public string fileName;
+    public Button nextButton;
 
-    private DialogueQueue queue;
+    private Queue<DialogueItem> dialogueQueue;
+    private bool isActive = false;
 
     void Start()
     {
         if (dialogueCanvas != null)
             dialogueCanvas.enabled = false;
+
+        if (nextButton != null)
+        {
+            nextButton.onClick.RemoveAllListeners();
+            nextButton.onClick.AddListener(ShowNext);
+        }
+        else
+        {
+            Debug.LogError("Next Button not assigned in DialogueManager!");
+        }
     }
 
-    void LoadDialogue(string filename)
+
+    public void StartDialogue(string fileName, string onlyTitle = null)
+    {
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        LoadDialogue(fileName);
+
+        if (dialogueQueue == null)
+            return;
+
+
+        if (!string.IsNullOrEmpty(onlyTitle))
+        {
+            Queue<DialogueItem> filtered = new Queue<DialogueItem>();
+            foreach (DialogueItem item in dialogueQueue)
+                if (item.title == onlyTitle)
+                    filtered.Enqueue(item);
+
+            dialogueQueue = filtered;
+        }
+
+        if (dialogueCanvas != null)
+            dialogueCanvas.enabled = true;
+
+        isActive = true;
+        ShowNext();
+    }
+
+    private void LoadDialogue(string fileName)
     {
         TextAsset json = Resources.Load<TextAsset>("Dialogues/" + fileName);
-        DialogueData data = JsonUtility.FromJson<DialogueData>(json.text);
 
-        queue = new DialogueQueue(data.dialogues.Length);
-
-        foreach (DialogueItem item in data.dialogues)
+        if (json == null)
         {
-            queue.Enqueue(item);
+            Debug.LogError("Dialogue JSON not found: " + fileName);
+            dialogueQueue = new Queue<DialogueItem>();
+            return;
         }
+
+        DialogueData data = JsonUtility.FromJson<DialogueData>(json.text);
+        dialogueQueue = new Queue<DialogueItem>(data.dialogues);
     }
 
     public void ShowNext()
     {
-        if (queue.IsEmpty())
+        if (dialogueQueue == null || dialogueQueue.Count == 0)
         {
             if (dialogueCanvas != null)
                 dialogueCanvas.enabled = false;
 
+            isActive = false;
+
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
             return;
         }
 
-        DialogueItem item = queue.Dequeue();
-        UpdateUI(item);
-    }
+        DialogueItem current = dialogueQueue.Dequeue();
+        titleText.text = current.title;
+        messageText.text = current.message;
 
-    void UpdateUI(DialogueItem item)
-    {
-        titleText.text = item.title;
-        messageText.text = item.message;
-
-        Sprite icon = Resources.Load<Sprite>("Icons/" + item.icon);
-
-        if (icon == null)
+        if (!string.IsNullOrEmpty(current.icon))
         {
-            Debug.LogError("Icon not found: " + item.icon);
-            return;
+            Sprite iconSprite = Resources.Load<Sprite>("Icons/" + current.icon);
+            iconImage.sprite = iconSprite;
         }
-
-        iconImage.sprite = icon;
+        else
+        {
+            iconImage.sprite = null;
+        }
     }
 
-    public void StartDialogue(string fileName)
+    public bool IsDialogueActive()
     {
-        if (dialogueCanvas != null)
-            dialogueCanvas.enabled = true;
-
-        LoadDialogue(fileName);
-        ShowNext();
+        return isActive;
     }
-
 }

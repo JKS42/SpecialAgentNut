@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &335275651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1532,11 +1532,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcfa0adb78e137e47b2ee013cbdd8a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
+  dialogueCanvas: {fileID: 335275653}
   titleText: {fileID: 577111235}
   messageText: {fileID: 1860509803}
   iconImage: {fileID: 1155436682}
-  dialogueCanvas: {fileID: 335275653}
-  fileName: beginner
+  nextButton: {fileID: 1673484985}
 --- !u!1 &1107206425
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,7 +2208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22656f27eb46c9d4a9556ee1691a9ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTrigger
-  fileName: Story
+  fileName: beginner
+  onlyTitle: Story
   dialogueManager: {fileID: 1103299353}
 --- !u!65 &1827078104
 BoxCollider:
