@@ -27,15 +27,21 @@ public class ResetTrigger : MonoBehaviour
     {
         if(other.CompareTag(playerTag))
         {
-            other.gameObject.transform.root.position = SpawnPoint;
-            camera.transform.position = new Vector3(SpawnPoint.x, camera.transform.position.y, camera.transform.position.z);
-            OnPlayerReset.Invoke();
             Rigidbody rb = other.gameObject.transform.root.GetComponent<Rigidbody>();
             if (rb != null)
             {
+                rb.isKinematic = true;
+                other.gameObject.transform.root.position = SpawnPoint;
+                rb.isKinematic = false;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
+            else
+            {
+                other.gameObject.transform.root.position = SpawnPoint;
+            }
+            camera.transform.position = new Vector3(SpawnPoint.x, camera.transform.position.y, camera.transform.position.z);
+            OnPlayerReset.Invoke();
         }
     }
 }
