@@ -17,7 +17,32 @@
         },
         {
             "title": "Story",
-            "message": "Special Agent Nut enters the scene with his most deadly mission yet: return home before Winter. Thus he embarks on a long and arduous quest to make it back safely",
+            "message": "Special Agent Nut enters the scene.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "His most deadly mission yet: return home before Winter.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Thus he embarks on a long and arduous quest.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "He must conquer the perilous terrain.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "And overcome the treacherous enviroment.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Only then can he return home to his family.",
             "icon": "story_icon"
         }
     ]

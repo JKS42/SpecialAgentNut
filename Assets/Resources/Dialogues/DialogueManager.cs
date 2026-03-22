@@ -10,6 +10,7 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI messageText;
     public Image iconImage;
     public Button nextButton;
+    //public MonoBehaviour playerMovement;
 
     private Queue<DialogueItem> dialogueQueue;
     private bool isActive = false;
