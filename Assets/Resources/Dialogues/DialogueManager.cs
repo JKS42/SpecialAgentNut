@@ -7,14 +7,15 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI messageText;
     public Image iconImage;
+    public Canvas dialogueCanvas;
     public string fileName;
 
     private DialogueQueue queue;
 
     void Start()
     {
-        LoadDialogue(fileName);
-        ShowNext();
+        if (dialogueCanvas != null)
+            dialogueCanvas.enabled = false;
     }
 
     void LoadDialogue(string filename)
@@ -34,6 +35,9 @@ public class DialogueManager : MonoBehaviour
     {
         if (queue.IsEmpty())
         {
+            if (dialogueCanvas != null)
+                dialogueCanvas.enabled = false;
+
             return;
         }
 
@@ -47,12 +51,23 @@ public class DialogueManager : MonoBehaviour
         messageText.text = item.message;
 
         Sprite icon = Resources.Load<Sprite>("Icons/" + item.icon);
+
+        if (icon == null)
+        {
+            Debug.LogError("Icon not found: " + item.icon);
+            return;
+        }
+
         iconImage.sprite = icon;
     }
 
     public void StartDialogue(string fileName)
     {
+        if (dialogueCanvas != null)
+            dialogueCanvas.enabled = true;
+
         LoadDialogue(fileName);
         ShowNext();
     }
+
 }

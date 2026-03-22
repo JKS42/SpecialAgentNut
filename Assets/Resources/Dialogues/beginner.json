@@ -1,0 +1,24 @@
+{
+    "dialogues": [
+        {
+            "title": "Warning",
+            "message": "Watch out! Moving platforms ahead",
+            "icon": "warning_icon"
+        },
+        {
+            "title": "Checkpoint",
+            "message": "Checkpoint reached!",
+            "icon": "checkpoint_icon"
+        },
+        {
+            "title": "Completion",
+            "message": "Congratulations! You have completed the level",
+            "icon": "completion_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Special Agent Nut enters the scene with his most deadly mission yet: return home before Winter. Thus he embarks on a long and arduous quest to make it back safely",
+            "icon": "story_icon"
+        }
+    ]
+}
