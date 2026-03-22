@@ -10,13 +10,14 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI messageText;
     public Image iconImage;
     public Button nextButton;
-    //public MonoBehaviour playerMovement;
+    public MonoBehaviour playerMovement;
 
     private Queue<DialogueItem> dialogueQueue;
     private bool isActive = false;
 
     void Start()
     {
+
         if (dialogueCanvas != null)
             dialogueCanvas.enabled = false;
 
@@ -25,18 +26,23 @@ public class DialogueManager : MonoBehaviour
             nextButton.onClick.RemoveAllListeners();
             nextButton.onClick.AddListener(ShowNext);
         }
-        else
-        {
-            Debug.LogError("Next Button not assigned in DialogueManager!");
-        }
     }
 
+    void Awake()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     public void StartDialogue(string fileName, string onlyTitle = null)
     {
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+
+        if (playerMovement != null)
+            playerMovement.enabled = false;
 
         LoadDialogue(fileName);
 
@@ -47,17 +53,22 @@ public class DialogueManager : MonoBehaviour
         if (!string.IsNullOrEmpty(onlyTitle))
         {
             Queue<DialogueItem> filtered = new Queue<DialogueItem>();
+
             foreach (DialogueItem item in dialogueQueue)
+            {
                 if (item.title == onlyTitle)
                     filtered.Enqueue(item);
+            }
 
             dialogueQueue = filtered;
         }
+
 
         if (dialogueCanvas != null)
             dialogueCanvas.enabled = true;
 
         isActive = true;
+
         ShowNext();
     }
 
@@ -80,11 +91,14 @@ public class DialogueManager : MonoBehaviour
     {
         if (dialogueQueue == null || dialogueQueue.Count == 0)
         {
+
             if (dialogueCanvas != null)
                 dialogueCanvas.enabled = false;
 
             isActive = false;
 
+            if (playerMovement != null)
+                playerMovement.enabled = true;
 
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -93,13 +107,18 @@ public class DialogueManager : MonoBehaviour
         }
 
         DialogueItem current = dialogueQueue.Dequeue();
+
         titleText.text = current.title;
         messageText.text = current.message;
 
         if (!string.IsNullOrEmpty(current.icon))
         {
             Sprite iconSprite = Resources.Load<Sprite>("Icons/" + current.icon);
-            iconImage.sprite = iconSprite;
+
+            if (iconSprite != null)
+                iconImage.sprite = iconSprite;
+            else
+                iconImage.sprite = null;
         }
         else
         {

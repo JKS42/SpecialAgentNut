@@ -16,6 +16,11 @@
             "icon": "completion_icon"
         },
         {
+            "title": "Completion",
+            "message": "Collect your reward!",
+            "icon": "completion_icon"
+        },
+        {
             "title": "Story",
             "message": "Special Agent Nut enters the scene.",
             "icon": "story_icon"
@@ -32,7 +37,7 @@
         },
         {
             "title": "Story",
-            "message": "He must conquer the perilous terrain.",
+            "message": "Where he must conquer the perilous terrain.",
             "icon": "story_icon"
         },
         {
