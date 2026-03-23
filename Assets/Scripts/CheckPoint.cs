@@ -14,7 +14,7 @@ public class CheckPoint : MonoBehaviour
         {
             if(isActive == true)
             {
-                resetTrigger.SetSpawnPoint(transform.position);
+                //resetTrigger.SetSpawnPoint(transform.position);
                 PlayVFX();
                 isActive = true;
             }
