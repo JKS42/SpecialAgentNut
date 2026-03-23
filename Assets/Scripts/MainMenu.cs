@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject howToPlayPanel;
+
     public void PlayGame()
     {
         SceneManager.LoadScene("Beginner_Level");
@@ -13,8 +15,13 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenHowToPlay()
+    public void ShowHowToPlay()
     {
-        
+        howToPlayPanel.SetActive(true);
+    }
+
+    public void HideHowToPlay()
+    {
+        howToPlayPanel.SetActive(false);
     }
 }
