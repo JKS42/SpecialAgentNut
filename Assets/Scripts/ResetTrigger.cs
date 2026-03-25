@@ -14,7 +14,7 @@ public class ResetTrigger : MonoBehaviour
         {
             other.gameObject.transform.position = respawnPoint.transform.position;
             //Destroy(player);
-            //wInstantiate(player, respawnPoint.transform.position, Quaternion.identity);
+            //Instantiate(player, respawnPoint.transform.position, Quaternion.identity);
         }
     }
 }

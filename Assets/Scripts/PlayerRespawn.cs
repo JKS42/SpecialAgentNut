@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerRespawn : MonoBehaviour
 {
     public float thresholdY;
+    public GameObject respawnPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,7 +15,11 @@ public class PlayerRespawn : MonoBehaviour
     {
         if(transform.position.y < thresholdY)
         {
-            transform.position = new Vector3(1.76f, 6.3f, -5.01f);
+            transform.position = respawnPosition.transform.position;
         }
+    }
+    public void SetRespawnPoint(Vector3 newRespawnPoint)
+    {
+        respawnPosition.transform.position = newRespawnPoint;
     }
 }

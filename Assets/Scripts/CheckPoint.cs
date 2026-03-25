@@ -6,18 +6,15 @@ public class CheckPoint : MonoBehaviour
     public string playerTag = "Player";
     private bool isActive = false;
     [SerializeField] ParticleSystem checkpointEffect;
-    [SerializeField] ResetTrigger resetTrigger;
+    [SerializeField] PlayerRespawn resetTrigger;
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(playerTag) && !isActive)
         {
-            if(isActive == true)
-            {
-                //resetTrigger.SetSpawnPoint(transform.position);
-                PlayVFX();
-                isActive = true;
-            }
+            resetTrigger.SetRespawnPoint(transform.position);
+            PlayVFX();
+            isActive = true;
         }
     }
     [ContextMenu("Activate Checkpoint")]
