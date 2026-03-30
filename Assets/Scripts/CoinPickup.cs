@@ -19,9 +19,20 @@ public class CoinPickup : MonoBehaviour
         {
             // Add your coin collection logic here, such as incrementing the player's coin count.
             Debug.Log("Coin collected!");
+            
+            // Increase UI score via UIManager
+            UIManager uiManager = Object.FindObjectsByType<UIManager>(FindObjectsSortMode.None)[0]; // Get the first instance of UIManager in the scene
+            if (uiManager != null)
+            {
+                uiManager.AddScore(1);
+            }
+            else
+            {
+                Debug.LogWarning("UIManager not found in scene. Score not updated.");
+            }
+
             // Destroy the coin object after collection
             Destroy(gameObject);
-            
         }
     }
 }

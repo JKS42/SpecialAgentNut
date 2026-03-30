@@ -4,28 +4,39 @@ public class PlayerRespawn : MonoBehaviour
 {
     public float thresholdY;
     public GameObject respawnPosition;
-    public float counter;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        counter = 3f;
-    }
+
+    private bool hasLostLifeThisFall = false;
 
     // Update is called once per frame
+    [System.Obsolete]
     void FixedUpdate()
     {
-        if(transform.position.y < thresholdY)
+        if (transform.position.y < thresholdY)
         {
-            transform.position = respawnPosition.transform.position;
-            counter -= 1f;
-            if(counter <= 0f)
+            if (!hasLostLifeThisFall)
             {
-                // Game Over
-                Debug.Log("Game Over");
-                // You can add your game over logic here, such as reloading the scene or showing a game over screen.
+                UIManager uiManager = FindObjectOfType<UIManager>();
+                if (uiManager != null)
+                {
+                    uiManager.LoseLife();
+                }
+                else
+                {
+                    Debug.LogWarning("UIManager not found in scene. Lives not updated.");
+                }
+
+                hasLostLifeThisFall = true;
             }
+
+            transform.position = respawnPosition.transform.position;
+        }
+        else
+        {
+            // Reset fall lock once player is back above threshold
+            hasLostLifeThisFall = false;
         }
     }
+
     public void SetRespawnPoint(Vector3 newRespawnPoint)
     {
         respawnPosition.transform.position = newRespawnPoint;

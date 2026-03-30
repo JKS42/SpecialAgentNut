@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public Image[] hearts;      
     public int maxLives = 3;
     private int currentLives;
+    private CoinPickup coinPickup; 
 
     [Header("Score")]
     public TMP_Text scoreText;  

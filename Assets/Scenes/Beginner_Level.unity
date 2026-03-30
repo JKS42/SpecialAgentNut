@@ -13067,7 +13067,7 @@ MonoBehaviour:
   hearts:
   - {fileID: 1388685110}
   - {fileID: 1018115618}
-  - {fileID: 2122638266}
+  - {fileID: 1018115618}
   maxLives: 3
   scoreText: {fileID: 1428404030}
 --- !u!4 &1868882169
