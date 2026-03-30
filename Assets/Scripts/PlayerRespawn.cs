@@ -1,44 +1,62 @@
+using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    public float thresholdY;
     public GameObject respawnPosition;
+    public float thresholdY;
+    public float counter;
+    public GameObject[] health;
+    public GameObject GameOverScreen;
+    public InputActionAsset inputActions;
+    private InputAction pauseAction;
+    private InputActionMap playerMap;
 
-    private bool hasLostLifeThisFall = false;
-
-    // Update is called once per frame
-    [System.Obsolete]
-    void FixedUpdate()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        if (transform.position.y < thresholdY)
-        {
-            if (!hasLostLifeThisFall)
-            {
-                UIManager uiManager = FindObjectOfType<UIManager>();
-                if (uiManager != null)
-                {
-                    uiManager.LoseLife();
-                }
-                else
-                {
-                    Debug.LogWarning("UIManager not found in scene. Lives not updated.");
-                }
-
-                hasLostLifeThisFall = true;
-            }
-
-            transform.position = respawnPosition.transform.position;
-        }
-        else
-        {
-            // Reset fall lock once player is back above threshold
-            hasLostLifeThisFall = false;
-        }
+        counter = 3f;
     }
 
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        
+        if(transform.position.y < thresholdY)
+        {
+            transform.position = respawnPosition.transform.position;
+            counter -= 1f;
+            if(counter == 2f)
+            {
+                health[2].SetActive(false);
+            }
+            else if(counter == 1f)
+            {
+                health[1].SetActive(false);
+            }
+            else if(counter == 0f)
+            {
+                health[0].SetActive(false);
+                GameOverScreen.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                Time.timeScale = 0f;
+                playerMap.Disable();
+            }
+            if(counter <= 0f)
+            {  
+                // Game Over
+                Debug.Log("Game Over");
+                // You can add your game over logic here, such as reloading the scene or showing a game over screen.
+
+            }
+        }
+    }
     public void SetRespawnPoint(Vector3 newRespawnPoint)
     {
         respawnPosition.transform.position = newRespawnPoint;
     }
+
 }
