@@ -905,7 +905,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 206846578}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1939958017}
+        m_TargetAssemblyTypeName: GameOverScript, Assembly-CSharp
+        m_MethodName: Retry
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &206846578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12686,7 +12698,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1669333993}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1939958017}
+        m_TargetAssemblyTypeName: GameOverScript, Assembly-CSharp
+        m_MethodName: quitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1669333993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12928,7 +12952,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1693890871}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1939958017}
+        m_TargetAssemblyTypeName: GameOverScript, Assembly-CSharp
+        m_MethodName: QuitToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1693890871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14876,6 +14912,7 @@ MonoBehaviour:
   - {fileID: 1018115616}
   - {fileID: 2122638264}
   GameOverScreen: {fileID: 404525174}
+  inputActions: {fileID: 0}
 --- !u!1 &2122638264
 GameObject:
   m_ObjectHideFlags: 0
