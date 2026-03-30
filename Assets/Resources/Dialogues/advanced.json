@@ -1,19 +1,54 @@
 {
-  "dialogues": [
-    {
-      "title": "Warning",
-      "message": "Watch out! Moving platforms ahead",
-      "icon": "warning_icon"
-    },
-    {
-      "title": "Checkpoint",
-      "message": "Checkpoint reached!",
-      "icon": "checkpoint_icon"
-    },
-    {
-      "title": "Completion",
-      "message": "Congragulations! You have completed the level",
-      "icon": "completion_icon"
-    },
-  ]
+    "dialogues": [
+        {
+            "title": "Warning",
+            "message": "Watch out! Moving platforms ahead",
+            "icon": "warning_icon"
+        },
+        {
+            "title": "Checkpoint",
+            "message": "Checkpoint reached!",
+            "icon": "checkpoint_icon"
+        },
+        {
+            "title": "Completion",
+            "message": "Congratulations! You have completed the level",
+            "icon": "completion_icon"
+        },
+        {
+            "title": "Completion",
+            "message": "Collect your reward!",
+            "icon": "completion_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Special Agent Nut enters the scene once again.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "As he nears his place of residence, he notices a snowflake land on his nose.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Winter seems to be aproaching quicker this year.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "He must hurry in order to make it back safe and sound.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Will Agent Nut succeed in this mission?",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Or will he succumb to the elements?",
+            "icon": "story_icon"
+        }
+    ]
 }

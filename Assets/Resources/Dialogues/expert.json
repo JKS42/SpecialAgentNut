@@ -1,19 +1,54 @@
 {
-  "dialogues": [
-    {
-      "title": "Warning",
-      "message": "Watch out! Moving platforms ahead",
-      "icon": "warning_icon"
-    },
-    {
-      "title": "Checkpoint",
-      "message": "Checkpoint reached!",
-      "icon": "checkpoint_icon"
-    },
-    {
-      "title": "Completion",
-      "message": "Congragulations! You have completed the level",
-      "icon": "completion_icon"
-    },
-  ]
+    "dialogues": [
+        {
+            "title": "Warning",
+            "message": "Watch out! Moving platforms ahead",
+            "icon": "warning_icon"
+        },
+        {
+            "title": "Checkpoint",
+            "message": "Checkpoint reached!",
+            "icon": "checkpoint_icon"
+        },
+        {
+            "title": "Completion",
+            "message": "Congratulations! You have completed the level",
+            "icon": "completion_icon"
+        },
+        {
+            "title": "Completion",
+            "message": "Collect your reward!",
+            "icon": "completion_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Special Agent Nut enters the scene for the final stretch home.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "A sudden gust of icy wind howls through the trees.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Agent Nut sees the once familiar path home is now buried beneath a blanket of snow.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Agent Nut tightens his scarf and presses forward, each step heavier than the last.",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "In the distance, a faint glow flickers between the trees… could it be shelter?",
+            "icon": "story_icon"
+        },
+        {
+            "title": "Story",
+            "message": "Everything rests on this final stretch.",
+            "icon": "story_icon"
+        }
+    ]
 }
