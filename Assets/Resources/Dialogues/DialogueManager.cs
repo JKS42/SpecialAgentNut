@@ -34,6 +34,10 @@ public class DialogueManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    /// <summary>
+    /// Starts a dialogue sequence from a JSON file
+    /// Optionally filters dialogue by a specific title
+    /// </summary>
     public void StartDialogue(string fileName, string onlyTitle = null)
     {
 
@@ -49,7 +53,7 @@ public class DialogueManager : MonoBehaviour
         if (dialogueQueue == null)
             return;
 
-
+        // Optional: filter dialogue to only include entries with a specific title
         if (!string.IsNullOrEmpty(onlyTitle))
         {
             Queue<DialogueItem> filtered = new Queue<DialogueItem>();
@@ -72,6 +76,9 @@ public class DialogueManager : MonoBehaviour
         ShowNext();
     }
 
+    /// <summary>
+    /// Loads dialogue JSON from Resources/Dialogues folder
+    /// </summary>
     private void LoadDialogue(string fileName)
     {
         TextAsset json = Resources.Load<TextAsset>("Dialogues/" + fileName);
@@ -83,15 +90,22 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
+        // Deserialize JSON into DialogueData object
         DialogueData data = JsonUtility.FromJson<DialogueData>(json.text);
+
+        // Convert list into a queue for sequential access
         dialogueQueue = new Queue<DialogueItem>(data.dialogues);
     }
 
+    /// <summary>
+    /// Displays the next dialogue item in the queue
+    /// </summary>
     public void ShowNext()
     {
         if (dialogueQueue == null || dialogueQueue.Count == 0)
         {
 
+            // If no more dialogue, end the conversation
             if (dialogueCanvas != null)
                 dialogueCanvas.enabled = false;
 
@@ -106,6 +120,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
+        // Get next dialogue item
         DialogueItem current = dialogueQueue.Dequeue();
 
         titleText.text = current.title;
@@ -126,6 +141,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    // Returns whether a dialogue is currently active
     public bool IsDialogueActive()
     {
         return isActive;

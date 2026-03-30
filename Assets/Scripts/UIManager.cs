@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using TMPro; 
 
 public class UIManager : MonoBehaviour
 {
     [Header("Lives")]
-    public Image[] hearts; 
+    public Image[] hearts;      
     public int maxLives = 3;
     private int currentLives;
 
     [Header("Score")]
-    public TMP_Text scoreText; 
+    public TMP_Text scoreText;  
     private int score = 0;
 
     void Start()
@@ -28,6 +28,14 @@ public class UIManager : MonoBehaviour
         UpdateLivesUI();
     }
 
+    // Call this to add a life
+    public void GainLife()
+    {
+        currentLives++;
+        if (currentLives > maxLives) currentLives = maxLives;
+        UpdateLivesUI();
+    }
+
     // Call this to add score
     public void AddScore(int amount)
     {
@@ -39,6 +47,7 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < hearts.Length; i++)
         {
+            // Enable hearts up to currentLives
             hearts[i].enabled = i < currentLives;
         }
     }

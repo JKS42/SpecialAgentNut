@@ -8,6 +8,8 @@ public class DialogueTrigger : MonoBehaviour
 
     private bool hasTriggered = false;
 
+
+    // Called when tag "Player" enters this trigger collider
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && !hasTriggered)
