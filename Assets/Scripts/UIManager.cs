@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; 
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     [Header("Lives")]
-    public Image[] hearts;      
+    public Image[] hearts;   
     public int maxLives = 3;
     private int currentLives;
-    private CoinPickup coinPickup; 
 
     [Header("Score")]
-    public TMP_Text scoreText;  
+    public TMP_Text scoreText;
     private int score = 0;
 
     void Start()
@@ -21,7 +20,7 @@ public class UIManager : MonoBehaviour
         UpdateScoreUI();
     }
 
-    // Call this to reduce a life
+    // Call to remove a life
     public void LoseLife()
     {
         currentLives--;
@@ -29,7 +28,7 @@ public class UIManager : MonoBehaviour
         UpdateLivesUI();
     }
 
-    // Call this to add a life
+    // Call to add a life
     public void GainLife()
     {
         currentLives++;
@@ -37,19 +36,34 @@ public class UIManager : MonoBehaviour
         UpdateLivesUI();
     }
 
-    // Call this to add score
+    // Check if player is full health
+    public bool IsFullHealth()
+    {
+        return currentLives >= maxLives;
+    }
+
+    // Call to add score
     public void AddScore(int amount)
     {
         score += amount;
         UpdateScoreUI();
     }
 
+    // Updates heart images
     void UpdateLivesUI()
     {
         for (int i = 0; i < hearts.Length; i++)
         {
-            // Enable hearts up to currentLives
-            hearts[i].enabled = i < currentLives;
+            if (i < currentLives)
+            {
+                // Make heart visible
+                hearts[i].enabled = true;
+            }
+            else
+            {
+                // Hide heart
+                hearts[i].enabled = false;
+            }
         }
     }
 

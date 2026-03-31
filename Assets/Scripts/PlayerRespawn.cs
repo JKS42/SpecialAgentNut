@@ -54,6 +54,23 @@ public class PlayerRespawn : MonoBehaviour
             }
         }
     }
+
+    public void GainLife()
+    {
+        // Only gain life if not at max
+        if (counter < health.Length)
+        {
+            counter += 1f;
+
+            // Re-enable hearts up to current counter
+            for (int i = 0; i < health.Length; i++)
+            {
+                health[i].SetActive(i < counter);
+            }
+
+            Debug.Log("Gained a life! Current lives: " + counter);
+        }
+    }
     public void SetRespawnPoint(Vector3 newRespawnPoint)
     {
         respawnPosition.transform.position = newRespawnPoint;

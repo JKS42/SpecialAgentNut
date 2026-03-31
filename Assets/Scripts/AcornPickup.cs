@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ScenePickup : MonoBehaviour
+public class AcornPickup : MonoBehaviour
 {
     public float rotationSpeed = 100f;
 

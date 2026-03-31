@@ -2,16 +2,25 @@ using UnityEngine;
 
 public class HeartPickup : MonoBehaviour
 {
-    public float rotationSpeed = 100f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
-    }
+    public UIManager uiManager;
 
-    // Update is called once per frame
+    public float rotationSpeed = 100f;
+
     void Update()
     {
-        
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        PlayerRespawn playerLife = other.GetComponent<PlayerRespawn>(); 
+        if (playerLife != null)
+        {
+            playerLife.GainLife();
+            Destroy(gameObject);
+        }
+
     }
 }
