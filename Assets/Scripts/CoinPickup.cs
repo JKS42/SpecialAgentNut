@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CoinPickup : MonoBehaviour
 {
+    public float rotationSpeed = 100f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -11,8 +12,9 @@ public class CoinPickup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
     }
+
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
@@ -24,7 +26,7 @@ public class CoinPickup : MonoBehaviour
             UIManager uiManager = Object.FindObjectsByType<UIManager>(FindObjectsSortMode.None)[0]; // Get the first instance of UIManager in the scene
             if (uiManager != null)
             {
-                uiManager.AddScore(1);
+                uiManager.AddScore(10);
             }
             else
             {

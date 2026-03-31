@@ -75,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7e692dcd75b92444fab69fcce6492bfe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 722096184502874413}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7e692dcd75b92444fab69fcce6492bfe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6700889266537287600}
   m_SourcePrefab: {fileID: 100100000, guid: 7e692dcd75b92444fab69fcce6492bfe, type: 3}
 --- !u!1 &6891880659320199279 stripped
 GameObject:
@@ -102,3 +105,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.334426, y: 2.3723917, z: 0.28863823}
   m_Center: {x: -0.00050640106, y: 2.0121288, z: -0.0057296157}
+--- !u!114 &-6700889266537287600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6891880659320199279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45702d2f52db12a418e97d88ba2ef50f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinPickup
+  rotationSpeed: 100

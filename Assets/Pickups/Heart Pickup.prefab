@@ -75,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f66ae58dc438e78409a0b7f1e821dbd9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5797129386180783231}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f66ae58dc438e78409a0b7f1e821dbd9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3983366050641657659}
   m_SourcePrefab: {fileID: 100100000, guid: f66ae58dc438e78409a0b7f1e821dbd9, type: 3}
 --- !u!1 &2859846278399542673 stripped
 GameObject:
@@ -102,3 +105,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 7.2
   m_Center: {x: 0, y: 0, z: 10.13}
+--- !u!114 &3983366050641657659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2859846278399542673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f112b6d0258ef48ac934aeaef8f6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeartPickup
+  rotationSpeed: 100
