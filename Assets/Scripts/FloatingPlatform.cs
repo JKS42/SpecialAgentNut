@@ -4,7 +4,7 @@ public class FloatingPlatform : MonoBehaviour
 {
     [SerializeField] private float height;
     [SerializeField] private Transform[] platformPoints;
-    [SerializeField] private float lerpSpeed = 1f;
+    [SerializeField] private float lerpSpeed;
 
     private float t = 0f;
     private int currentIndex = 0;
