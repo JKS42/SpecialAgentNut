@@ -23,4 +23,9 @@ public class GameOverScript : MonoBehaviour
     {
         Application.Quit();
     }
+    public void GameOver()
+    {
+        GameOverScreen.SetActive(true);
+        Time.timeScale = 0f;
+    }
 }
