@@ -15,6 +15,8 @@ public class PlayerRespawn : MonoBehaviour
     private InputActionMap playerMap;
     public GameOverScript gameOverScript;
     bool isDead = false;
+    private float lastDamageTime;
+    public float damageCooldown = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -73,4 +75,32 @@ public class PlayerRespawn : MonoBehaviour
         respawnPosition.transform.position = newRespawnPoint;
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+
+        if (Time.time - lastDamageTime < damageCooldown) return;
+
+        lastDamageTime = Time.time;
+
+        counter -= amount;
+
+        for (int i = 0; i < health.Length; i++)
+        {
+            health[i].SetActive(i < counter);
+        }
+
+        if (counter <= 0f)
+        {
+            isDead = true;
+
+            Debug.Log("Game Over");
+
+            gameOverScript.GameOver();
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            playerMap.Disable();
+        }
+    }
 }
