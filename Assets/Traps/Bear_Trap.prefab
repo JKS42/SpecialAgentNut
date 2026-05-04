@@ -74,6 +74,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 492288e4f7e438e4bbe16660f76241ed, type: 3}
       insertIndex: -1
       addedObject: {fileID: -1553435472414341723}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 492288e4f7e438e4bbe16660f76241ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5069379706232863005}
   m_SourcePrefab: {fileID: 100100000, guid: 492288e4f7e438e4bbe16660f76241ed, type: 3}
 --- !u!1 &2497453047690707392 stripped
 GameObject:
@@ -99,8 +102,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 38.21294, y: 5.4280586, z: 40.414646}
-  m_Center: {x: -0.028097153, y: 0.5344242, z: 0.014059067}
+  m_Size: {x: 38.21294, y: 11.371389, z: 40.414646}
+  m_Center: {x: -0.028096838, y: 3.506086, z: 0.014058792}
 --- !u!114 &-1553435472414341723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,3 +117,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapDamage
   damage: 1
+--- !u!64 &5069379706232863005
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2497453047690707392}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4791964571443196536, guid: 492288e4f7e438e4bbe16660f76241ed, type: 3}
