@@ -783,6 +783,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
+      propertyPath: lerpSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
       propertyPath: 'platformPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 350288676}
@@ -7773,6 +7777,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
+      propertyPath: lerpSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
       propertyPath: 'platformPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1802814415}
@@ -9290,7 +9298,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11454,7 +11463,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7892723703621336756, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
