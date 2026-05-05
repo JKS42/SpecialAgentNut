@@ -1,6 +1,4 @@
-using System.Threading;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 public class PlayerRespawn : MonoBehaviour
@@ -11,32 +9,35 @@ public class PlayerRespawn : MonoBehaviour
     public GameObject[] health;
     public GameObject GameOverScreen;
     public InputActionAsset inputActions;
-    private InputAction pauseAction;
     private InputActionMap playerMap;
     public GameOverScript gameOverScript;
+
+    [Header("Game Over Sound")]
+    public AudioClip gameOverSound;
+    public float soundVolume = 1f;
+
     bool isDead = false;
     private float lastDamageTime;
     public float damageCooldown = 1f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         counter = 3f;
         playerMap = inputActions.FindActionMap("Player");
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-
         if (transform.position.y < thresholdY)
         {
+            // Respawn and lose one life
             transform.position = respawnPosition.transform.position;
             counter -= 1f;
 
             if (counter <= 2f) health[2].SetActive(false);
             if (counter <= 1f) health[1].SetActive(false);
 
+            // Only trigger death when no lives remain
             if (counter <= 0f)
             {
                 health[0].SetActive(false);
@@ -44,24 +45,23 @@ public class PlayerRespawn : MonoBehaviour
 
                 Debug.Log("Game Over");
 
+                PlayGameOverSound();
+
                 gameOverScript.GameOver();
 
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 playerMap.Disable();
-
             }
         }
     }
 
     public void GainLife()
     {
-        // Only gain life if not at max
         if (counter < health.Length)
         {
             counter += 1f;
 
-            // Re-enable hearts up to current counter
             for (int i = 0; i < health.Length; i++)
             {
                 health[i].SetActive(i < counter);
@@ -70,6 +70,7 @@ public class PlayerRespawn : MonoBehaviour
             Debug.Log("Gained a life! Current lives: " + counter);
         }
     }
+
     public void SetRespawnPoint(Vector3 newRespawnPoint)
     {
         respawnPosition.transform.position = newRespawnPoint;
@@ -78,11 +79,9 @@ public class PlayerRespawn : MonoBehaviour
     public void TakeDamage(int amount)
     {
         if (isDead) return;
-
         if (Time.time - lastDamageTime < damageCooldown) return;
 
         lastDamageTime = Time.time;
-
         counter -= amount;
 
         for (int i = 0; i < health.Length; i++)
@@ -96,11 +95,21 @@ public class PlayerRespawn : MonoBehaviour
 
             Debug.Log("Game Over");
 
+            PlayGameOverSound();
+
             gameOverScript.GameOver();
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             playerMap.Disable();
+        }
+    }
+
+    void PlayGameOverSound()
+    {
+        if (gameOverSound != null)
+        {
+            AudioSource.PlayClipAtPoint(gameOverSound, transform.position, soundVolume);
         }
     }
 }

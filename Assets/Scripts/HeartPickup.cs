@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class HeartPickup : MonoBehaviour
 {
-    public UIManager uiManager;
 
     public float rotationSpeed = 100f;
+
+    public AudioClip pickupSound;
+    public float soundVolume = 1f;
 
     void Update()
     {
@@ -15,12 +17,18 @@ public class HeartPickup : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        PlayerRespawn playerLife = other.GetComponent<PlayerRespawn>(); 
+        PlayerRespawn playerLife = other.GetComponent<PlayerRespawn>();
+
         if (playerLife != null)
         {
             playerLife.GainLife();
+
+            if (pickupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
+            }
+
             Destroy(gameObject);
         }
-
     }
 }

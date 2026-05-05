@@ -117,4 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f112b6d0258ef48ac934aeaef8f6a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartPickup
+  uiManager: {fileID: 0}
   rotationSpeed: 100
+  pickupSound: {fileID: 8300000, guid: 8ce14858148c08a459f93602337335eb, type: 3}
+  soundVolume: 1

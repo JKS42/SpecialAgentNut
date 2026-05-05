@@ -3,13 +3,10 @@ using UnityEngine;
 public class CoinPickup : MonoBehaviour
 {
     public float rotationSpeed = 100f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-       
-    }
 
-    // Update is called once per frame
+    public AudioClip pickupSound;
+    public float soundVolume = 1f;
+
     void Update()
     {
         transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
@@ -17,13 +14,18 @@ public class CoinPickup : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            // Add your coin collection logic here, such as incrementing the player's coin count.
             Debug.Log("Coin collected!");
-            
-            // Increase UI score via UIManager
-            UIManager uiManager = Object.FindObjectsByType<UIManager>(FindObjectsSortMode.None)[0]; // Get the first instance of UIManager in the scene
+
+
+            if (pickupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
+            }
+
+            UIManager uiManager = Object.FindObjectsByType<UIManager>(FindObjectsSortMode.None)[0];
+
             if (uiManager != null)
             {
                 uiManager.AddScore(10);
@@ -33,7 +35,6 @@ public class CoinPickup : MonoBehaviour
                 Debug.LogWarning("UIManager not found in scene. Score not updated.");
             }
 
-            // Destroy the coin object after collection
             Destroy(gameObject);
         }
     }
