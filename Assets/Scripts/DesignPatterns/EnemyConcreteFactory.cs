@@ -1,11 +1,18 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyConcreteFactory", menuName = "Scriptable Objects/EnemyConcreteFactory")]
-public class EnemyConcreteFactory : ScriptableObject, IEnemyFactory
+public class EnemyConcreteFactory : IEnemyFactory
 {
-    public GameObject enemyPrefab;
-    public IEnemy CreateEnemy()
+    [SerializeField] private GameObject enemyPrefab;
+
+    public override GameObject CreateEnemy(Vector3 position, Quaternion rotation)
     {
-        return Instantiate(enemyPrefab).GetComponent<IEnemy>();
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("Need a object to spawn");
+            return null;
+        }
+
+        return Instantiate(enemyPrefab, position, rotation);
     }
 }

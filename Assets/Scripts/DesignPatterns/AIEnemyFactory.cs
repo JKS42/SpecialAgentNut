@@ -1,35 +1,29 @@
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+public class AIEnemyFactory : MonoBehaviour
 {
     [SerializeField] private IEnemyFactory enemyFactory;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private float spawnInterval = 5f;
-
-    private void Start()
-    {
-        SpawnEnemy();
-    }
-    private void FixedUpdate()
-    {
-        spawnInterval -= Time.fixedDeltaTime;
-        if (spawnInterval <= 0)
-        {
-            SpawnEnemy();
-            spawnInterval = 5f; 
-        }
-    }
 
     public GameObject SpawnEnemy()
     {
-        spawnInterval--;
         if (enemyFactory == null)
         {
-            Debug.Log("Doesn't work");
+            Debug.LogError("Needs a factory to spawn");
             return null;
         }
 
         Transform currentSpawnPoint = spawnPoint != null ? spawnPoint : transform;
         return enemyFactory.CreateEnemy(currentSpawnPoint.position, currentSpawnPoint.rotation);
+    }
+
+    public void Attack()
+    {
+        
+    }
+
+    public void TakeDamage(int amount)
+    {
+        
     }
 }
