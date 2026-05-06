@@ -5,6 +5,9 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private IEnemyFactory enemyFactory;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private int maxEnemies = 5;
+
+    private int currentEnemies = 0;
 
     private void Start()
     {
@@ -12,6 +15,11 @@ public class EnemySpawner : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (currentEnemies >= maxEnemies)
+        {
+            return;
+        }
+
         spawnInterval -= Time.fixedDeltaTime;
         if (spawnInterval <= 0)
         {
@@ -22,7 +30,11 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject SpawnEnemy()
     {
-        spawnInterval--;
+        if (currentEnemies >= maxEnemies)
+        {
+            return null;
+        }
+
         if (enemyFactory == null)
         {
             Debug.Log("Doesn't work");
@@ -30,6 +42,13 @@ public class EnemySpawner : MonoBehaviour
         }
 
         Transform currentSpawnPoint = spawnPoint != null ? spawnPoint : transform;
-        return enemyFactory.CreateEnemy(currentSpawnPoint.position, currentSpawnPoint.rotation);
+        GameObject spawnedEnemy = enemyFactory.CreateEnemy(currentSpawnPoint.position, currentSpawnPoint.rotation);
+
+        if (spawnedEnemy != null)
+        {
+            currentEnemies++;
+        }
+
+        return spawnedEnemy;
     }
 }
