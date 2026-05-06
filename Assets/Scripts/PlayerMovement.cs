@@ -1,14 +1,21 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
+using NUnit.Framework;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Animator animator;
+    private bool isMoving;
+    private bool isSprinting;
+    private bool isJumping;
+    private bool isJogging;
     [Header("Movement")]
 
     [SerializeField] private float moveSpeed = 5f;
 
     [SerializeField] private float sprintMultiplier = 1.5f;
-[Header("References")]
+    [Header("References")]
 
     [SerializeField] private CharacterController characterController;
 
@@ -41,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
 
     {
+
+        animator = GetComponent<Animator>();
 
         // Get character controller if not assigned
 
@@ -115,6 +124,30 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
 
     {
+        float currentLayerweight = animator.GetLayerWeight(0);
+        float targetLayerWeight;
+        if (isJumping)
+        {
+            targetLayerWeight = 1f;
+        }
+        else if (isSprinting)
+        {
+            targetLayerWeight = 0.75f;
+        }
+        else if (isJogging)
+        {
+            targetLayerWeight = 0.6f;
+        }
+        else if (isMoving)
+        {
+            targetLayerWeight = 0.5f;
+        }
+        else
+        {
+            targetLayerWeight = 0f;
+        }
+        float newLayerWeight = Mathf.Lerp(currentLayerweight, targetLayerWeight, Time.deltaTime * 5f);
+        animator.SetLayerWeight(0, newLayerWeight);
 
         HandleMovement();
 
@@ -123,10 +156,19 @@ public class PlayerMovement : MonoBehaviour
         characterController.Move(velocity * Time.deltaTime);
     }
     private void HandleMovement()
-
     {
 
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
+        if(isMoving == false && moveInput!= Vector2.zero)
+        {
+            isMoving = true;
+            animator.CrossFadeInFixedTime("Walking", 0.1f,0);
+        }
+        else if(isMoving == true && moveInput.magnitude <= 0.1f)
+        {
+            isMoving = false;
+            animator.CrossFadeInFixedTime("Idle", 0.1f,0);
+        }
 
         bool isSprinting = sprintAction.IsPressed();
 
@@ -171,11 +213,21 @@ public class PlayerMovement : MonoBehaviour
     private void OnJump(InputAction.CallbackContext context)
 
     {
+        if (jumpAction.IsPressed() && characterController.isGrounded)
+        {
+            isJumping = true;
+            animator.CrossFadeInFixedTime("Jumping", 0.1f,0);
+        }
+        else
+        {
+          isJumping = false;
+           animator.CrossFadeInFixedTime("Idle", 0.1f,0);
+        }
+
 
         if (characterController.isGrounded)
 
         {
-
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
 
         }
