@@ -1,43 +1,51 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private IEnemyFactory enemyFactory;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private float spawnInterval = 5f;
+    [SerializeField] private float spawnIntervalSeconds = 5f;
     [SerializeField] private int maxEnemies = 5;
 
-    private int currentEnemies = 0;
+    private float spawnTimer;
+    private readonly List<GameObject> spawnedEnemies = new List<GameObject>();
 
     private void Start()
     {
+        spawnTimer = spawnIntervalSeconds;
         SpawnEnemy();
     }
+
     private void FixedUpdate()
     {
-        if (currentEnemies >= maxEnemies)
+        CleanupDestroyedEnemies();
+
+        if (spawnedEnemies.Count >= maxEnemies)
         {
             return;
         }
 
-        spawnInterval -= Time.fixedDeltaTime;
-        if (spawnInterval <= 0)
+        spawnTimer -= Time.fixedDeltaTime;
+        if (spawnTimer <= 0f)
         {
             SpawnEnemy();
-            spawnInterval = 5f; 
+            spawnTimer = spawnIntervalSeconds;
         }
     }
 
     public GameObject SpawnEnemy()
     {
-        if (currentEnemies >= maxEnemies)
+        CleanupDestroyedEnemies();
+
+        if (spawnedEnemies.Count >= maxEnemies)
         {
             return null;
         }
 
         if (enemyFactory == null)
         {
-            Debug.Log("Doesn't work");
+            Debug.LogError("EnemySpawner needs an enemy factory assigned.");
             return null;
         }
 
@@ -46,9 +54,14 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnedEnemy != null)
         {
-            currentEnemies++;
+            spawnedEnemies.Add(spawnedEnemy);
         }
 
         return spawnedEnemy;
+    }
+
+    private void CleanupDestroyedEnemies()
+    {
+        spawnedEnemies.RemoveAll(enemy => enemy == null);
     }
 }

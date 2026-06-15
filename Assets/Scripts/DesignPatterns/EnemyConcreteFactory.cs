@@ -9,7 +9,7 @@ public class EnemyConcreteFactory : IEnemyFactory
     {
         if (enemyPrefab == null)
         {
-            Debug.LogError("Need a object to spawn");
+            Debug.LogError("EnemyConcreteFactory needs an enemy prefab assigned.");
             return null;
         }
 

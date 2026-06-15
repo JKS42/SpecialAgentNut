@@ -9,7 +9,7 @@ public class AIEnemyFactory : MonoBehaviour
     {
         if (enemyFactory == null)
         {
-            Debug.LogError("Needs a factory to spawn");
+            Debug.LogError("AIEnemyFactory needs an enemy factory assigned.");
             return null;
         }
 
