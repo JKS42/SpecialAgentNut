@@ -5325,7 +5325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyFactory: {fileID: 11400000, guid: 0a6a9164493b0754aa1f298af2d64647, type: 2}
   spawnPoint: {fileID: 1023908110}
-  spawnInterval: 5
+  spawnIntervalSeconds: 5
   maxEnemies: 5
 --- !u!4 &1023908110
 Transform:
@@ -8435,7 +8435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyFactory: {fileID: 11400000, guid: d07999aeebf2b2041b1506f85e5b1d1d, type: 2}
   spawnPoint: {fileID: 1531899101}
-  spawnInterval: 5
+  spawnIntervalSeconds: 5
   maxEnemies: 5
 --- !u!4 &1531899101
 Transform:
@@ -8686,6 +8686,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 517808fe3b8f04c429858a45e9941b37, type: 3}
+--- !u!1001 &1549882203
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1471474259214984019, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_Name
+      value: SFXManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18.86541
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 204.16925
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756408403869917157, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7080affb4b67b284babdacfa0a542bdc, type: 3}
 --- !u!1001 &1564767147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10507,7 +10564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyFactory: {fileID: 11400000, guid: 2a71eb348d19596498ec4b3479e129a1, type: 2}
   spawnPoint: {fileID: 1898829937}
-  spawnInterval: 5
+  spawnIntervalSeconds: 5
   maxEnemies: 5
 --- !u!1001 &1902378565
 PrefabInstance:
@@ -12789,6 +12846,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1549882203}
   - {fileID: 696970347}
   - {fileID: 895408291}
   - {fileID: 1896886352}

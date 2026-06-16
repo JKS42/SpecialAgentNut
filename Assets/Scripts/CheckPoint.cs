@@ -13,6 +13,7 @@ public class CheckPoint : MonoBehaviour
         if(other.CompareTag(playerTag) && !isActive)
         {
             resetTrigger.SetRespawnPoint(transform.position);
+            SFXManager.Instance.PlaySound("Checkpoint");
             PlayVFX();
             isActive = true;
         }

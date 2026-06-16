@@ -74,7 +74,8 @@ public class EnemyPatrol : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             currentTarget = collision.gameObject.GetComponent<PlayerRespawn>();
-            
+            SFXManager.Instance.PlaySound("EnemyAttack");
+
         }
     }
 

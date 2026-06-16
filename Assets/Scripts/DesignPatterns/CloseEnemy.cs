@@ -77,6 +77,7 @@ public class CloseEnemy : MonoBehaviour
     public void Attack()
     {
         Debug.Log("Close Enemy Attacks!");
+        SFXManager.Instance.PlaySound("EnemyAttack");
     }
 
     public void TakeDamage(int amount)

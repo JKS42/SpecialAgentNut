@@ -8,6 +8,7 @@ public class SoundLoader : MonoBehaviour
     public AudioClip pickupCoin;
     public AudioClip death;
     public AudioClip checkpoint;
+    public AudioClip jump;
 
     private void Start()
     {
@@ -17,5 +18,6 @@ public class SoundLoader : MonoBehaviour
         SFXManager.Instance.AddSound("PickupCoin", pickupCoin); 
         SFXManager.Instance.AddSound("Death", death);
         SFXManager.Instance.AddSound("Checkpoint", checkpoint);
+        SFXManager.Instance.AddSound("Jump", jump);
     }
 }

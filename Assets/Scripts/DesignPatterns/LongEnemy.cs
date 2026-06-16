@@ -98,6 +98,7 @@ public class LongEnemy : MonoBehaviour
         }
 
         Debug.Log("Long Enemy shoots at player!");
+        SFXManager.Instance.PlaySound("EnemyAttack");
     }
     public void TakeDamage(int amount)
     {

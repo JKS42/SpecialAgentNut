@@ -10,6 +10,12 @@ public class PlayerMovement : MonoBehaviour
     private bool isSprinting;
     private bool isJumping;
     private bool isJogging;
+    private float footstepTimer;
+
+    [Header("Audio")]
+    [SerializeField] private float footstepInterval = 0.5f;
+    [SerializeField] private float sprintFootstepInterval = 0.3f;
+
     [Header("Movement")]
 
     [SerializeField] private float moveSpeed = 5f;
@@ -121,11 +127,11 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void Update()
-
-    {
+    private void Update()
+    {
         float currentLayerweight = animator.GetLayerWeight(0);
         float targetLayerWeight;
+
         if (isJumping)
         {
             targetLayerWeight = 1f;
@@ -146,49 +152,50 @@ public class PlayerMovement : MonoBehaviour
         {
             targetLayerWeight = 0f;
         }
-        float newLayerWeight = Mathf.Lerp(currentLayerweight, targetLayerWeight, Time.deltaTime * 5f);
+
+        float newLayerWeight = Mathf.Lerp(
+            currentLayerweight,
+            targetLayerWeight,
+            Time.deltaTime * 5f);
+
         animator.SetLayerWeight(0, newLayerWeight);
 
-        HandleMovement();
+        HandleMovement();
+        HandleFootsteps();
+        ApplyGravity();
 
-        ApplyGravity();
-
-        characterController.Move(velocity * Time.deltaTime);
+        characterController.Move(velocity * Time.deltaTime);
     }
     private void HandleMovement()
-    {
+    {
+        Vector2 moveInput = moveAction.ReadValue<Vector2>();
 
-        Vector2 moveInput = moveAction.ReadValue<Vector2>();
-        if(isMoving == false && moveInput!= Vector2.zero)
+        if (!isMoving && moveInput != Vector2.zero)
         {
             isMoving = true;
-            animator.CrossFadeInFixedTime("Walking", 0.1f,0);
+            animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
         }
-        else if(isMoving == true && moveInput.magnitude <= 0.1f)
+        else if (isMoving && moveInput.magnitude <= 0.1f)
         {
             isMoving = false;
-            animator.CrossFadeInFixedTime("Idle", 0.1f,0);
+            animator.CrossFadeInFixedTime("Idle", 0.1f, 0);
         }
 
-        bool isSprinting = sprintAction.IsPressed();
+        // FIXED: updates the class variable
+        isSprinting = sprintAction.IsPressed();
 
-        // Convert 2D input to 3D movement
+        Vector3 moveDirection =
+            transform.forward * moveInput.y +
+            transform.right * moveInput.x;
 
-        Vector3 moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
+        float currentSpeed =
+            moveSpeed * (isSprinting ? sprintMultiplier : 1f);
 
-        // Apply sprint multiplier
+        velocity.x = moveDirection.x * currentSpeed;
+        velocity.z = moveDirection.z * currentSpeed;
+    }
 
-        float currentSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
-
-        // Update horizontal velocity
-
-        velocity.x = moveDirection.x * currentSpeed;
-
-        velocity.z = moveDirection.z * currentSpeed;
-
-    }
-
-    private void ApplyGravity()
+    private void ApplyGravity()
 
     {
 
@@ -231,10 +238,38 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
 
         }
+        if (characterController.isGrounded)
+        {
+            SFXManager.Instance.PlaySound("Jump");
 
-    }
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        }
 
-    private void OnCrouch(InputAction.CallbackContext context)
+    }
+    private void HandleFootsteps()
+    {
+        Vector2 moveInput = moveAction.ReadValue<Vector2>();
+
+        if (characterController.isGrounded && moveInput.magnitude > 0.1f)
+        {
+            float currentInterval =
+                isSprinting ? sprintFootstepInterval : footstepInterval;
+
+            footstepTimer += Time.deltaTime;
+
+            if (footstepTimer >= currentInterval)
+            {
+                SFXManager.Instance.PlaySound("Footstep");
+                footstepTimer = 0f;
+            }
+        }
+        else
+        {
+            footstepTimer = 0f;
+        }
+    }
+
+    private void OnCrouch(InputAction.CallbackContext context)
 
     {
 
