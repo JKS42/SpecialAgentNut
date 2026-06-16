@@ -3,7 +3,6 @@ using UnityEngine.AI;
 
 public class LongEnemy : MonoBehaviour
 {
-    [SerializeField] private float patrolRadius = 8f;
     [SerializeField] private float patrolDelay = 2f;
     [SerializeField] private float patrolPointReachedDistance = 1f;
     [SerializeField] private float attackRadius = 12f;
@@ -13,16 +12,30 @@ public class LongEnemy : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private float projectileSpeed = 18f;
 
+    public WaypointLinkedList waypoints = new WaypointLinkedList();
+
     private NavMeshAgent agent;
     private float nextPatrolTime;
     private float nextAttackTime;
     private Transform currentTarget;
+    private WaypointNode currentNode;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        Patrol();
+
+        WaypointManager waypointManager = Object.FindFirstObjectByType<WaypointManager>();
+        if (waypointManager != null)
+        {
+            waypoints = waypointManager.customList;
+            currentNode = waypoints.Head;
+            Patrol();
+        }
+        else
+        {
+            Debug.LogWarning("LongEnemy could not find a WaypointManager in the scene.");
+        }
     }
 
     // Update is called once per frame
@@ -52,6 +65,7 @@ public class LongEnemy : MonoBehaviour
 
         if (agent.remainingDistance <= patrolPointReachedDistance && Time.time >= nextPatrolTime)
         {
+            AdvanceWaypoint();
             Patrol();
         }
     }
@@ -69,16 +83,25 @@ public class LongEnemy : MonoBehaviour
 
     public void Patrol()
     {
-        if (agent == null)
+        if (agent == null || waypoints == null || currentNode == null)
         {
             return;
         }
-        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius + transform.position;
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
+
+        agent.SetDestination(currentNode.Data.position);
+        nextPatrolTime = Time.time + patrolDelay;
+    }
+
+    private void AdvanceWaypoint()
+    {
+        if (waypoints == null || waypoints.Head == null)
         {
-            agent.SetDestination(hit.position);
-            nextPatrolTime = Time.time + patrolDelay;
+            return;
         }
+
+        currentNode = currentNode != null && currentNode.Next != null
+            ? currentNode.Next
+            : waypoints.Head;
     }
     public void Attack()
     {

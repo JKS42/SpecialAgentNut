@@ -3,22 +3,35 @@ using UnityEngine.AI;
 
 public class CloseEnemy : MonoBehaviour
 {
-    [SerializeField] private float patrolRadius = 8f;
     [SerializeField] private float patrolDelay = 2f;
     [SerializeField] private float patrolPointReachedDistance = 1f;
     [SerializeField] private float attackRadius = 5f;
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private LayerMask playerLayer;
 
+    public WaypointLinkedList waypoints = new WaypointLinkedList();
+
     private NavMeshAgent agent;
     private float nextPatrolTime;
     private float nextAttackTime;
     private bool wasPlayerInRange;
+    private WaypointNode currentNode;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        Patrol();
+
+        WaypointManager waypointManager = Object.FindFirstObjectByType<WaypointManager>();
+        if (waypointManager != null)
+        {
+            waypoints = waypointManager.customList;
+            currentNode = waypoints.Head;
+            Patrol();
+        }
+        else
+        {
+            Debug.LogWarning("CloseEnemy could not find a WaypointManager in the scene.");
+        }
     }
     void Update()
     {
@@ -51,6 +64,7 @@ public class CloseEnemy : MonoBehaviour
 
         if (agent.remainingDistance <= patrolPointReachedDistance && Time.time >= nextPatrolTime)
         {
+            AdvanceWaypoint();
             Patrol();
         }
     }
@@ -62,16 +76,25 @@ public class CloseEnemy : MonoBehaviour
 
     public void Patrol()
     {
-        if (agent == null)
+        if (agent == null || waypoints == null || currentNode == null)
         {
             return;
         }
-        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius + transform.position;
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
+
+        agent.SetDestination(currentNode.Data.position);
+        nextPatrolTime = Time.time + patrolDelay;
+    }
+
+    private void AdvanceWaypoint()
+    {
+        if (waypoints == null || waypoints.Head == null)
         {
-            agent.SetDestination(hit.position);
-            nextPatrolTime = Time.time + patrolDelay;
+            return;
         }
+
+        currentNode = currentNode != null && currentNode.Next != null
+            ? currentNode.Next
+            : waypoints.Head;
     }
 
     public void Attack()

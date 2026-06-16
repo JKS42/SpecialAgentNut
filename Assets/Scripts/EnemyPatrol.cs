@@ -5,20 +5,23 @@ public class EnemyPatrol : MonoBehaviour
 {
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private float detectionRadius = 8f;
 
     public WaypointLinkedList waypoints = new WaypointLinkedList();
-    private int currentIndex = 0;
+    private WaypointNode currentNode;
     private NavMeshAgent agent;
     private PlayerRespawn currentTarget;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        currentTarget = Object.FindFirstObjectByType<PlayerRespawn>();
 
         WaypointManager waypointManager = Object.FindFirstObjectByType<WaypointManager>();
         if (waypointManager != null)
         {
             waypoints = waypointManager.customList;
+            currentNode = waypoints.Head;
             UpdateTarget();
         }
         else
@@ -27,18 +30,37 @@ public class EnemyPatrol : MonoBehaviour
         }
     }
 
-    void UpdateTarget()
+    void Update()
     {
-        if (agent == null || waypoints == null || waypoints.Count == 0)
+        if (agent == null)
         {
             return;
         }
 
-        Transform target = waypoints.GetByIndex(currentIndex);
-        if (target != null)
+        if (currentTarget != null)
         {
-            agent.SetDestination(target.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, currentTarget.transform.position);
+
+            if (distanceToPlayer <= detectionRadius)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(currentTarget.transform.position);
+                return;
+            }
         }
+
+        agent.isStopped = false;
+        UpdateTarget();
+    }
+
+    void UpdateTarget()
+    {
+        if (agent == null || waypoints == null || currentNode == null)
+        {
+            return;
+        }
+
+        agent.SetDestination(currentNode.Data.position);
     }
 
     
@@ -48,8 +70,10 @@ public class EnemyPatrol : MonoBehaviour
         // Check if we hit a waypoint
         if (other.CompareTag("Waypoint"))
         {
-            // Increment index and loop back to 0 if at the end
-            currentIndex = (currentIndex + 1) % waypoints.Count;
+            // Advance to the next linked waypoint, looping back to the head.
+            currentNode = currentNode != null && currentNode.Next != null
+                ? currentNode.Next
+                : waypoints.Head;
             UpdateTarget();
         }
     }
@@ -64,8 +88,6 @@ public class EnemyPatrol : MonoBehaviour
             {
                 agent.isStopped = true;
             }
-
-            
         }
     }
 
@@ -92,5 +114,11 @@ public class EnemyPatrol : MonoBehaviour
 
             UpdateTarget();
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

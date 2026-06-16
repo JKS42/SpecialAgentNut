@@ -7,6 +7,7 @@ public class WaypointLinkedList
     private int count = 0;
 
     public int Count => count;
+    public WaypointNode Head => head;
 
     // Add a new waypoint to the end of the list
     public void Add(Transform waypoint)
