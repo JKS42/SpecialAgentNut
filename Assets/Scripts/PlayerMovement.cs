@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping;
     private bool isJogging;
     private float footstepTimer;
+    private float groundedTimer;
 
     [Header("Audio")]
     [SerializeField] private float footstepInterval = 0.5f;
@@ -165,24 +166,44 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
 
         characterController.Move(velocity * Time.deltaTime);
+
+        // Reset jump state when grounded again
+        if (characterController.isGrounded && isJumping && velocity.y <= 0)
+        {
+            isJumping = false;
+        }
+        if (characterController.isGrounded)
+        {
+            groundedTimer = 0.15f;
+        }
+        else
+        {
+            groundedTimer -= Time.deltaTime;
+        }
     }
     private void HandleMovement()
     {
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
 
-        if (!isMoving && moveInput != Vector2.zero)
+        isMoving = moveInput.magnitude > 0.1f;
+
+        isSprinting = sprintAction.IsPressed();
+
+        if (isMoving)
         {
-            isMoving = true;
-            animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
+            if (isSprinting)
+            {
+                animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
+            }
+            else
+            {
+                animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
+            }
         }
-        else if (isMoving && moveInput.magnitude <= 0.1f)
+        else
         {
-            isMoving = false;
             animator.CrossFadeInFixedTime("Idle", 0.1f, 0);
         }
-
-        // FIXED: updates the class variable
-        isSprinting = sprintAction.IsPressed();
 
         Vector3 moveDirection =
             transform.forward * moveInput.y +
@@ -217,40 +238,31 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void OnJump(InputAction.CallbackContext context)
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        if (groundedTimer <= 0f)
+            return;
 
-    {
-        if (jumpAction.IsPressed() && characterController.isGrounded)
-        {
-            isJumping = true;
-            animator.CrossFadeInFixedTime("Jumping", 0.1f,0);
-        }
-        else
-        {
-          isJumping = false;
-           animator.CrossFadeInFixedTime("Idle", 0.1f,0);
-        }
+        isJumping = true;
 
+        animator.CrossFadeInFixedTime("Jumping", 0.1f, 0);
 
-        if (characterController.isGrounded)
+        SFXManager.Instance.PlaySound("Jump");
 
-        {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
 
-        }
-        if (characterController.isGrounded)
-        {
-            SFXManager.Instance.PlaySound("Jump");
-
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-        }
-
+        groundedTimer = 0f;
     }
+
     private void HandleFootsteps()
     {
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
 
-        if (characterController.isGrounded && moveInput.magnitude > 0.1f)
+        bool isWalking =
+            groundedTimer > 0f &&
+            moveInput.magnitude > 0.1f;
+
+        if (isWalking)
         {
             float currentInterval =
                 isSprinting ? sprintFootstepInterval : footstepInterval;
