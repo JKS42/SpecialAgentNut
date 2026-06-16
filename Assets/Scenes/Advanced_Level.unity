@@ -3749,6 +3749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 630668902}
   - component: {fileID: 630668903}
+  - component: {fileID: 630668904}
   m_Layer: 0
   m_Name: AddForce (2)
   m_TagString: Untagged
@@ -3792,6 +3793,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &630668904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630668901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04397294723bb0f4b9ad60997ef9098e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AddForce
+  floatingPlatform: {fileID: 630668902}
+  lerpSpeed: 5
 --- !u!1 &648494538
 GameObject:
   m_ObjectHideFlags: 0
@@ -7247,6 +7262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1287515713}
   - component: {fileID: 1287515714}
+  - component: {fileID: 1287515715}
   m_Layer: 0
   m_Name: AddForce (1)
   m_TagString: Untagged
@@ -7290,6 +7306,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1287515715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287515712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04397294723bb0f4b9ad60997ef9098e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AddForce
+  floatingPlatform: {fileID: 1287515713}
+  lerpSpeed: 5
 --- !u!1001 &1291250326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10298,6 +10328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1718047682}
   - component: {fileID: 1718047683}
+  - component: {fileID: 1718047684}
   m_Layer: 0
   m_Name: AddForce
   m_TagString: Untagged
@@ -10341,6 +10372,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1718047684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718047681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04397294723bb0f4b9ad60997ef9098e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AddForce
+  floatingPlatform: {fileID: 1718047682}
+  lerpSpeed: 5
 --- !u!1001 &1723473791
 PrefabInstance:
   m_ObjectHideFlags: 0

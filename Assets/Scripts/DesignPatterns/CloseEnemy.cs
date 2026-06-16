@@ -7,6 +7,7 @@ public class CloseEnemy : MonoBehaviour
     [SerializeField] private float patrolPointReachedDistance = 1f;
     [SerializeField] private float attackRadius = 5f;
     [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private int attackDamage = 1;
     [SerializeField] private LayerMask playerLayer;
 
     public WaypointLinkedList waypoints = new WaypointLinkedList();
@@ -101,6 +102,17 @@ public class CloseEnemy : MonoBehaviour
     {
         Debug.Log("Close Enemy Attacks!");
         SFXManager.Instance.PlaySound("EnemyAttack");
+
+        Collider[] playersInRange = Physics.OverlapSphere(transform.position, attackRadius, playerLayer);
+        foreach (Collider playerCollider in playersInRange)
+        {
+            PlayerRespawn playerHealth = playerCollider.GetComponentInParent<PlayerRespawn>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(attackDamage);
+                break;
+            }
+        }
     }
 
     public void TakeDamage(int amount)

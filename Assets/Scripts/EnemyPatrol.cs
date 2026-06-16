@@ -11,6 +11,7 @@ public class EnemyPatrol : MonoBehaviour
     private WaypointNode currentNode;
     private NavMeshAgent agent;
     private PlayerRespawn currentTarget;
+    private float nextAttackTime;
 
     void Start()
     {
@@ -45,6 +46,13 @@ public class EnemyPatrol : MonoBehaviour
             {
                 agent.isStopped = false;
                 agent.SetDestination(currentTarget.transform.position);
+
+                if (Time.time >= nextAttackTime)
+                {
+                    AttackPlayer();
+                    nextAttackTime = Time.time + attackCooldown;
+                }
+
                 return;
             }
         }
@@ -61,6 +69,17 @@ public class EnemyPatrol : MonoBehaviour
         }
 
         agent.SetDestination(currentNode.Data.position);
+    }
+
+    private void AttackPlayer()
+    {
+        if (currentTarget == null)
+        {
+            return;
+        }
+
+        currentTarget.TakeDamage(attackDamage);
+        SFXManager.Instance.PlaySound("EnemyAttack");
     }
 
     
@@ -96,7 +115,12 @@ public class EnemyPatrol : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             currentTarget = collision.gameObject.GetComponent<PlayerRespawn>();
-            SFXManager.Instance.PlaySound("EnemyAttack");
+
+            if (Time.time >= nextAttackTime)
+            {
+                AttackPlayer();
+                nextAttackTime = Time.time + attackCooldown;
+            }
 
         }
     }
