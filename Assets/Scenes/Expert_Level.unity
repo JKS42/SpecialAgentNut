@@ -1034,7 +1034,7 @@ Transform:
   m_GameObject: {fileID: 150708266}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50.4, y: 16.58, z: 211.7}
+  m_LocalPosition: {x: 58.84, y: 16.58, z: 215.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1053,7 +1053,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GraphNode
   nodeName: WayPoints (5)
-  neighbors: []
+  neighbors:
+  - {fileID: 1121011063}
+  - {fileID: 1559716065}
 --- !u!1001 &168848741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3111,7 +3113,7 @@ Transform:
   m_GameObject: {fileID: 493508490}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 74.6, y: 16.58, z: 166.2}
+  m_LocalPosition: {x: 76, y: 16.58, z: 171.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3503,7 +3505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4619437770843211693, guid: 517808fe3b8f04c429858a45e9941b37, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.99
+      value: 13.82
       objectReference: {fileID: 0}
     - target: {fileID: 4619437770843211693, guid: 517808fe3b8f04c429858a45e9941b37, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4086,7 +4088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4619437770843211693, guid: 517808fe3b8f04c429858a45e9941b37, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 14.99
+      value: 13.82
       objectReference: {fileID: 0}
     - target: {fileID: 4619437770843211693, guid: 517808fe3b8f04c429858a45e9941b37, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5773,9 +5775,10 @@ MonoBehaviour:
   detectionRange: 10
   attackThreshold: 15
   lowHealthThreshold: 30
-  useNavMeshForPatrol: 1
-  navMeshSampleRadius: 2
-  allowPlatformLinks: 1
+  useGraphRouteForPatrol: 1
+  graphRoute: {fileID: 2038881137}
+  graphPatrolStartNode: {fileID: 1121011063}
+  graphPatrolGoalNode: {fileID: 2062276782}
   currentDecision: 
   gizmoColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!136 &1161018100
@@ -7598,7 +7601,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GraphNode
   nodeName: WayPoints (4)
-  neighbors: []
+  neighbors:
+  - {fileID: 1121011063}
+  - {fileID: 1559716065}
 --- !u!1001 &1520527251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8183,7 +8188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6471702072603387204, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7
+      value: 5.83
       objectReference: {fileID: 0}
     - target: {fileID: 6471702072603387204, guid: c8e0f5b6f00a75a49b195d77b2a00cdf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9216,7 +9221,7 @@ Transform:
   m_GameObject: {fileID: 1829355349}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.13, y: 16.58, z: 168.52}
+  m_LocalPosition: {x: 13.5, y: 16.58, z: 154.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9235,7 +9240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GraphNode
   nodeName: WayPoints (3)
-  neighbors: []
+  neighbors:
+  - {fileID: 2062276782}
+  - {fileID: 1559716065}
 --- !u!1001 &1837893952
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10302,7 +10309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3018376005063678842, guid: e7b074ee778b679408e59d35347ac4f8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16.820066
+      value: 15.650066
       objectReference: {fileID: 0}
     - target: {fileID: 3018376005063678842, guid: e7b074ee778b679408e59d35347ac4f8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10386,7 +10393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GraphRoute
   startNode: {fileID: 1121011063}
-  goalNode: {fileID: 150708268}
+  goalNode: {fileID: 2062276782}
   findRouteOnStart: 1
 --- !u!1001 &2039302246
 PrefabInstance:
@@ -10484,7 +10491,7 @@ Transform:
   m_GameObject: {fileID: 2062276780}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 45, y: 16.58, z: 135}
+  m_LocalPosition: {x: 68, y: 16.58, z: 138.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11158,7 +11165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6302772272124599505, guid: 8b2f7789077f69f458e3919626d6ea22, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15.447
+      value: 14.276999
       objectReference: {fileID: 0}
     - target: {fileID: 6302772272124599505, guid: 8b2f7789077f69f458e3919626d6ea22, type: 3}
       propertyPath: m_LocalPosition.z
