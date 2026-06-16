@@ -6628,9 +6628,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundLoader
   footstep: {fileID: 0}
   enemyAttack: {fileID: 0}
-  platformMove: {fileID: 0}
-  pickup: {fileID: 0}
-  death: {fileID: 0}
+  pickupHeart: {fileID: 8300000, guid: 8ce14858148c08a459f93602337335eb, type: 3}
+  pickupCoin: {fileID: 8300000, guid: c952c74dd0dfb5c44b632b0c5564c936, type: 3}
+  death: {fileID: 8300000, guid: 1d2f348735857f047b7a5defd60d930a, type: 3}
+  checkpoint: {fileID: 0}
 --- !u!114 &1401600061
 MonoBehaviour:
   m_ObjectHideFlags: 0

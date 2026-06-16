@@ -12,9 +12,9 @@ public class PlayerRespawn : MonoBehaviour
     private InputActionMap playerMap;
     public GameOverScript gameOverScript;
 
-    [Header("Game Over Sound")]
-    public AudioClip gameOverSound;
-    public float soundVolume = 1f;
+    //[Header("Game Over Sound")]
+    //public AudioClip gameOverSound;
+    //public float soundVolume = 1f;
 
     bool isDead = false;
     private float lastDamageTime;
@@ -45,7 +45,7 @@ public class PlayerRespawn : MonoBehaviour
 
                 Debug.Log("Game Over");
 
-                PlayGameOverSound();
+                SFXManager.Instance.PlaySound("Death");
 
                 gameOverScript.GameOver();
 
@@ -95,7 +95,7 @@ public class PlayerRespawn : MonoBehaviour
 
             Debug.Log("Game Over");
 
-            PlayGameOverSound();
+            SFXManager.Instance.PlaySound("Death"); ;
 
             gameOverScript.GameOver();
 
@@ -105,11 +105,11 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
-    void PlayGameOverSound()
-    {
-        if (gameOverSound != null)
-        {
-            AudioSource.PlayClipAtPoint(gameOverSound, transform.position, soundVolume);
-        }
-    }
+    //void PlayGameOverSound()
+    //{
+    //    if (gameOverSound != null)
+    //    {
+    //        AudioSource.PlayClipAtPoint(gameOverSound, transform.position, soundVolume);
+    //    }
+    //}
 }

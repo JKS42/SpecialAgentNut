@@ -4,9 +4,6 @@ public class CoinPickup : MonoBehaviour
 {
     public float rotationSpeed = 100f;
 
-    public AudioClip pickupSound;
-    public float soundVolume = 1f;
-
     void Update()
     {
         transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
@@ -18,11 +15,7 @@ public class CoinPickup : MonoBehaviour
         {
             Debug.Log("Coin collected!");
 
-
-            if (pickupSound != null)
-            {
-                AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
-            }
+            SFXManager.Instance.PlaySound("PickupCoin");
 
             UIManager uiManager = Object.FindObjectsByType<UIManager>(FindObjectsSortMode.None)[0];
 

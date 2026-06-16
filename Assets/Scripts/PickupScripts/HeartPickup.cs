@@ -2,11 +2,7 @@ using UnityEngine;
 
 public class HeartPickup : MonoBehaviour
 {
-
     public float rotationSpeed = 100f;
-
-    public AudioClip pickupSound;
-    public float soundVolume = 1f;
 
     void Update()
     {
@@ -23,10 +19,7 @@ public class HeartPickup : MonoBehaviour
         {
             playerLife.GainLife();
 
-            if (pickupSound != null)
-            {
-                AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
-            }
+            SFXManager.Instance.PlaySound("PickupHeart");
 
             Destroy(gameObject);
         }
