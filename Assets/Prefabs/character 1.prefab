@@ -340,15 +340,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eae348791ab2938418d7d668a726c238, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.92262405
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eae348791ab2938418d7d668a726c238, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.036
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eae348791ab2938418d7d668a726c238, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -47.12825
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: eae348791ab2938418d7d668a726c238, type: 3}
       propertyPath: m_LocalRotation.w
@@ -695,6 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd2a47bd209b4b54cabd5cfae055d14f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  currentSpeed: 0
   footstepInterval: 0.5
   sprintFootstepInterval: 0.3
   moveSpeed: 5

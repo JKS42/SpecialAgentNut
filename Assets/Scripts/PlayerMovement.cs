@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isJogging;
     private float footstepTimer;
     private float groundedTimer;
+    public float currentSpeed;
 
     [Header("Audio")]
     [SerializeField] private float footstepInterval = 0.5f;
@@ -130,38 +131,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        float currentLayerweight = animator.GetLayerWeight(0);
-        float targetLayerWeight;
-
-        if (isJumping)
-        {
-            targetLayerWeight = 1f;
-        }
-        else if (isSprinting)
-        {
-            targetLayerWeight = 0.75f;
-        }
-        else if (isJogging)
-        {
-            targetLayerWeight = 0.6f;
-        }
-        else if (isMoving)
-        {
-            targetLayerWeight = 0.5f;
-        }
-        else
-        {
-            targetLayerWeight = 0f;
-        }
-
-        float newLayerWeight = Mathf.Lerp(
-            currentLayerweight,
-            targetLayerWeight,
-            Time.deltaTime * 5f);
-
-        animator.SetLayerWeight(0, newLayerWeight);
+        animator.SetLayerWeight(0, 1f);
 
         HandleMovement();
+        animator.SetBool("isMoving", isMoving);
+        animator.SetFloat("currentSpeed", currentSpeed);
         HandleFootsteps();
         ApplyGravity();
 
@@ -189,28 +163,13 @@ public class PlayerMovement : MonoBehaviour
 
         isSprinting = sprintAction.IsPressed();
 
-        if (isMoving)
-        {
-            if (isSprinting)
-            {
-                animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
-            }
-            else
-            {
-                animator.CrossFadeInFixedTime("Walking", 0.1f, 0);
-            }
-        }
-        else
-        {
-            animator.CrossFadeInFixedTime("Idle", 0.1f, 0);
-        }
-
         Vector3 moveDirection =
             transform.forward * moveInput.y +
             transform.right * moveInput.x;
 
-        float currentSpeed =
-            moveSpeed * (isSprinting ? sprintMultiplier : 1f);
+        currentSpeed = isMoving
+            ? moveSpeed * (isSprinting ? sprintMultiplier : 1f)
+            : 0f;
 
         velocity.x = moveDirection.x * currentSpeed;
         velocity.z = moveDirection.z * currentSpeed;
@@ -245,7 +204,7 @@ public class PlayerMovement : MonoBehaviour
 
         isJumping = true;
 
-        animator.CrossFadeInFixedTime("Jumping", 0.1f, 0);
+        animator.SetTrigger("Jumping");
 
         SFXManager.Instance.PlaySound("Jump");
 
