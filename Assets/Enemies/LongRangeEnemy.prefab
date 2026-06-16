@@ -220,4 +220,4 @@ MonoBehaviour:
     m_Bits: 8
   projectilePrefab: {fileID: 4547237943305273581, guid: d39013f786ff65841a56a89ee588117c, type: 3}
   firePoint: {fileID: 4471522931638157454}
-  projectileSpeed: 18
+  projectileSpeed: 30
