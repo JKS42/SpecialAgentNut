@@ -1,8 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-
+using UnityEngine.AI;
 public class BossBehavior : MonoBehaviour
 {
     [Header("References")]
@@ -26,6 +25,12 @@ public class BossBehavior : MonoBehaviour
     public float attackThreshold = 15f;
     public float lowHealthThreshold = 30f;
 
+    [Header("Graph Patrol")]
+    public bool useGraphRouteForPatrol = true;
+    public GraphRoute graphRoute;
+    public GraphNode graphPatrolStartNode;
+    public GraphNode graphPatrolGoalNode;
+
     [Header("State Debug")]
     public string currentDecision;               
     public Color gizmoColor = Color.white;
@@ -35,6 +40,9 @@ public class BossBehavior : MonoBehaviour
     private float attackTimer;                   
     private float reloadTimer;                   
     private bool isReloading; 
+    private List<GraphNode> graphPatrolPath = new List<GraphNode>();
+    private int graphPathIndex;
+    private NavMeshAgent navAgent;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -42,8 +50,22 @@ public class BossBehavior : MonoBehaviour
     }
     private void Awake()
     {
+        navAgent = GetComponent<NavMeshAgent>();
+        if (navAgent != null)
+        {
+            navAgent.speed = moveSpeed;
+            navAgent.stoppingDistance = patrolPointStopDistance;
+            navAgent.autoTraverseOffMeshLink = true;
+
+            if (!navAgent.isOnNavMesh && NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                navAgent.Warp(hit.position);
+            }
+        }
+
         currentHealth = maxHealth;
         BuildDecisionTree();
+        RefreshGraphPatrolPath();
     }
 
     // Update is called once per frame
@@ -85,7 +107,7 @@ public class BossBehavior : MonoBehaviour
 
         QuestionNode playerInAttackRangeNode = new QuestionNode(
             "Is player in attack range?",
-            () => Vector3.Distance(transform.position, player.position) <= attackRange);
+            () => player != null && DistanceToPlayer() <= attackRange);
 
         QuestionNode lowHealthNode = new QuestionNode(
             "Is health low?",
@@ -93,26 +115,36 @@ public class BossBehavior : MonoBehaviour
 
         QuestionNode playerDetectedNode = new QuestionNode(
             "Is player detected?",
-             () => Vector3.Distance(transform.position, player.position) <= detectionRange);
-             
-             
-        playerInAttackRangeNode.falseNode = patrolNode;
-        playerInAttackRangeNode.trueNode = lowHealthNode;
+             () => player != null && DistanceToPlayer() <= detectionRange);
+
+        playerDetectedNode.falseNode = patrolNode;
+        playerDetectedNode.trueNode = lowHealthNode;
 
         lowHealthNode.trueNode = fleeNode;
         lowHealthNode.falseNode = playerInAttackRangeNode;
 
-        playerInAttackRangeNode.falseNode = chaseNode;
         playerInAttackRangeNode.trueNode = attackNode;
-
+        playerInAttackRangeNode.falseNode = chaseNode;
 
         // Set the first question as the root of the tree
-        rootNode = playerInAttackRangeNode;
+        rootNode = playerDetectedNode;
         
 
     }
     private void Patrol()
     {
+        if (navAgent != null && navAgent.isOnNavMesh)
+        {
+            if (useGraphRouteForPatrol && PatrolUsingGraphRoute())
+                return;
+
+            PatrolUsingNavMeshWaypoints();
+            return;
+        }
+
+        if (useGraphRouteForPatrol && PatrolUsingGraphRoute())
+            return;
+
         // Stop if there are no patrol points assigned
         if (waypoints == null || waypoints.Count == 0)
             return;
@@ -137,6 +169,98 @@ public class BossBehavior : MonoBehaviour
         // Move to the patrol point
         MoveTowards(targetPosition, moveSpeed);
     }
+    private void PatrolUsingNavMeshWaypoints()
+    {
+        if (waypoints == null || waypoints.Count == 0)
+            return;
+
+        if (patrolIndex < 0 || patrolIndex >= waypoints.Count)
+            patrolIndex = 0;
+
+        Transform target = waypoints[patrolIndex];
+        if (target == null)
+            return;
+
+        Vector3 targetPosition = new Vector3(target.position.x, transform.position.y, target.position.z);
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, patrolPointStopDistance * 4f, NavMesh.AllAreas))
+        {
+            navAgent.stoppingDistance = patrolPointStopDistance;
+            navAgent.isStopped = false;
+            navAgent.SetDestination(hit.position);
+
+            if (!navAgent.pathPending && navAgent.remainingDistance <= patrolPointStopDistance)
+            {
+                patrolIndex = (patrolIndex + 1) % waypoints.Count;
+            }
+        }
+    }
+    private bool PatrolUsingGraphRoute()
+    {
+        if (graphRoute == null)
+            return false;
+
+        if (graphPatrolPath == null || graphPatrolPath.Count < 2)
+        {
+            RefreshGraphPatrolPath();
+            if (graphPatrolPath == null || graphPatrolPath.Count < 2)
+                return false;
+        }
+
+        graphPathIndex = Mathf.Clamp(graphPathIndex, 0, graphPatrolPath.Count - 1);
+        GraphNode targetNode = graphPatrolPath[graphPathIndex];
+        if (targetNode == null)
+            return false;
+
+        Vector3 targetPosition = new Vector3(targetNode.transform.position.x, transform.position.y, targetNode.transform.position.z);
+        float distance = Vector3.Distance(transform.position, targetPosition);
+
+        if (distance <= patrolPointStopDistance)
+        {
+            graphPathIndex++;
+
+            if (graphPathIndex >= graphPatrolPath.Count)
+            {
+                // Reached goal: swap endpoints and go back to start
+                SwapGraphPatrolEndpoints();
+                RefreshGraphPatrolPath();
+                if (graphPatrolPath == null || graphPatrolPath.Count == 0)
+                    return false;
+                
+                // Skip the current waypoint (it's the old goal) and move to the next one
+                if (graphPatrolPath.Count > 1)
+                    graphPathIndex = 1;
+                else
+                    graphPathIndex = 0;
+            }
+
+            graphPathIndex = Mathf.Clamp(graphPathIndex, 0, graphPatrolPath.Count - 1);
+            targetNode = graphPatrolPath[graphPathIndex];
+            if (targetNode == null)
+                return false;
+
+            targetPosition = new Vector3(targetNode.transform.position.x, transform.position.y, targetNode.transform.position.z);
+        }
+
+        MoveTowards(targetPosition, moveSpeed);
+        return true;
+    }
+    private void RefreshGraphPatrolPath()
+    {
+        graphPatrolPath.Clear();
+        graphPathIndex = 0;
+
+        if (graphRoute == null)
+            return;
+
+        graphPatrolPath = graphRoute.FindShortestPathBFS(graphPatrolStartNode, graphPatrolGoalNode);
+    }
+    private void SwapGraphPatrolEndpoints()
+    {
+        // Swap start and goal so the boss patrols in reverse on the way back
+        GraphNode previousStart = graphPatrolStartNode;
+        graphPatrolStartNode = graphPatrolGoalNode;
+        graphPatrolGoalNode = previousStart;
+    }
     private string EvaluateDecisionTree(DecisionNode currentNode)
     {
         while (currentNode != null)
@@ -160,6 +284,12 @@ public class BossBehavior : MonoBehaviour
     }
     private void AttackPlayer()
     {
+        if (player == null)
+            return;
+
+        if (navAgent != null && navAgent.isOnNavMesh)
+            navAgent.isStopped = true;
+
         // Face the player while attacking
         FaceTarget(player.position);
 
@@ -184,10 +314,37 @@ public class BossBehavior : MonoBehaviour
     }
     private void ChasePlayer()
     {
+        if (navAgent != null && navAgent.isOnNavMesh)
+        {
+            navAgent.stoppingDistance = attackRange;
+            navAgent.isStopped = false;
+
+            if (player != null)
+                navAgent.SetDestination(player.position);
+
+            return;
+        }
+
         MoveTowards(player.position, moveSpeed);
     }
     private void Flee()
     {
+        if (player == null)
+            return;
+
+        if (navAgent != null && navAgent.isOnNavMesh)
+        {
+            Vector3 away = (transform.position - player.position).normalized;
+            Vector3 flee = transform.position + away * 3f;
+
+            if (NavMesh.SamplePosition(flee, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            {
+                navAgent.stoppingDistance = 0f;
+                navAgent.isStopped = false;
+                navAgent.SetDestination(hit.position);
+                return;
+            }
+        }
 
         Vector3 awayDirection = (transform.position - player.position).normalized;
 
