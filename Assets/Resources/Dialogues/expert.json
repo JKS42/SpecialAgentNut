@@ -7,7 +7,7 @@
         },
         {
             "title": "Checkpoint",
-            "message": "Checkpoint reached!",
+            "message": "You have reached a checkpoint!",
             "icon": "checkpoint_icon"
         },
         {
@@ -27,7 +27,7 @@
         },
         {
             "title": "Story",
-            "message": "A sudden gust of icy wind howls through the trees.",
+            "message": "A sudden gust of icy wind howls through the trees and snow coming down on their head.",
             "icon": "story_icon"
         },
         {
@@ -37,7 +37,7 @@
         },
         {
             "title": "Story",
-            "message": "Agent Nut tightens his scarf and presses forward, each step heavier than the last.",
+            "message": "Agent Nut steps forward, his boots crunching against the frozen ground.",
             "icon": "story_icon"
         },
         {
