@@ -10,6 +10,7 @@ public class BossBehavior : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private string animatorSpeedParameter = "currentSpeed";
     [SerializeField] private string attackTriggerParameter = "isAttacking";
+    [SerializeField] private GameObject VictoryPanel;
     
 
     [Header("BossStats")]
@@ -516,6 +517,7 @@ public class BossBehavior : MonoBehaviour
         if (currentHealth <= 0f)
         {
             Destroy(gameObject);
+            VictoryPanel.SetActive(true);
         }
     }
 
