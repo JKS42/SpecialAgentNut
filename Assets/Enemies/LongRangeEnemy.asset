@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ef303fbe166eb4dbaf1a72d4ebdbcf, type: 3}
   m_Name: LongRangeEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyConcreteFactory
-  enemyPrefab: {fileID: 8882679262533777400, guid: 109729a6ddd147d45825ca9b9196cac4, type: 3}
+  enemyPrefab: {fileID: 3094527072305701008, guid: eb56a414b65f88b4b9c44cc9a096dc3e, type: 3}

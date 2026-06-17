@@ -11,10 +11,13 @@ public class LongEnemy : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float projectileSpeed = 18f;
+    [SerializeField] private int maxHealth = 30;
+    [SerializeField] private float rotationSpeed = 720f;
 
     public WaypointLinkedList waypoints = new WaypointLinkedList();
 
     private NavMeshAgent agent;
+    private int currentHealth;
     private float nextPatrolTime;
     private float nextAttackTime;
     private Transform currentTarget;
@@ -23,7 +26,12 @@ public class LongEnemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currentHealth = maxHealth;
         agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.updateRotation = false;
+        }
 
         WaypointManager waypointManager = Object.FindFirstObjectByType<WaypointManager>();
         if (waypointManager != null)
@@ -55,11 +63,13 @@ public class LongEnemy : MonoBehaviour
                 nextAttackTime = Time.time + attackCooldown;
             }
 
+            FaceMovementDirection();
             return;
         }
 
         if (agent.pathPending)
         {
+            FaceMovementDirection();
             return;
         }
 
@@ -68,6 +78,8 @@ public class LongEnemy : MonoBehaviour
             AdvanceWaypoint();
             Patrol();
         }
+
+        FaceMovementDirection();
     }
 
     private Transform FindTargetInRange()
@@ -103,6 +115,28 @@ public class LongEnemy : MonoBehaviour
             ? currentNode.Next
             : waypoints.Head;
     }
+
+    private void FaceMovementDirection()
+    {
+        if (agent == null)
+        {
+            return;
+        }
+
+        Vector3 direction = agent.desiredVelocity.sqrMagnitude > 0.01f
+            ? agent.desiredVelocity
+            : agent.velocity;
+
+        direction.y = 0f;
+        if (direction.sqrMagnitude <= 0.01f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
     public void Attack()
     {
         if (projectilePrefab == null || currentTarget == null)
@@ -125,7 +159,13 @@ public class LongEnemy : MonoBehaviour
     }
     public void TakeDamage(int amount)
     {
+        currentHealth -= amount;
         Debug.Log("Long Enemy takes " + amount + " damage!");
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnDrawGizmosSelected()

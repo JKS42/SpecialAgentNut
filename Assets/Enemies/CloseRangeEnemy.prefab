@@ -150,11 +150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d27f4a90d3a59a4b925b5aed07a4466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CloseEnemy
-  patrolRadius: 8
   patrolDelay: 2
   patrolPointReachedDistance: 1
   attackRadius: 2.5
   attackCooldown: 1
+  attackDamage: 1
   playerLayer:
     serializedVersion: 2
     m_Bits: 8

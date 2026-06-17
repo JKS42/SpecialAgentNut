@@ -464,6 +464,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd2a47bd209b4b54cabd5cfae055d14f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  currentSpeed: 0
+  footstepInterval: 0.5
+  sprintFootstepInterval: 0.3
+  projectilePrefab: {fileID: 4547237943305273581, guid: d39013f786ff65841a56a89ee588117c, type: 3}
+  firePoint: {fileID: 0}
+  projectileSpeed: 30
+  projectileDamage: 20
+  shootCooldown: 0.25
+  projectileSpawnOffset: 1
   moveSpeed: 5
   sprintMultiplier: 1.5
   characterController: {fileID: 7261347885520446686}

@@ -1,7 +1,5 @@
-using UnityEngine.InputSystem;
 using UnityEngine;
-using NUnit.Framework;
-using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,193 +7,152 @@ public class PlayerMovement : MonoBehaviour
     private bool isMoving;
     private bool isSprinting;
     private bool isJumping;
-    private bool isJogging;
     private float footstepTimer;
     private float groundedTimer;
+    private float nextShootTime;
+
     public float currentSpeed;
 
     [Header("Audio")]
     [SerializeField] private float footstepInterval = 0.5f;
     [SerializeField] private float sprintFootstepInterval = 0.3f;
 
+    [Header("Shooting")]
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float projectileSpeed = 30f;
+    [SerializeField] private int projectileDamage = 20;
+    [SerializeField] private float shootCooldown = 0.25f;
+    [SerializeField] private float projectileSpawnOffset = 1f;
+
     [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float sprintMultiplier = 1.5f;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float crouchHeight = 0.6f;
 
-    [SerializeField] private float moveSpeed = 5f;
-
-    [SerializeField] private float sprintMultiplier = 1.5f;
     [Header("References")]
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private InputActionAsset inputActions;
+    [SerializeField] private Camera playerCamera;
 
-    [SerializeField] private CharacterController characterController;
+    private InputActionMap playerActionMap;
+    private InputAction moveAction;
+    private InputAction sprintAction;
+    private InputAction jumpAction;
+    private InputAction crouchAction;
+    private InputAction attackAction;
+    private Vector3 velocity;
+    private readonly float gravity = -9.81f;
+    private float normalHeight = 2f;
 
-    [SerializeField] private InputActionAsset inputActions;
-
-    [SerializeField] private Camera playerCamera;
-
-    private InputActionMap playerActionMap;
-
-    private InputAction moveAction;
-
-    private InputAction sprintAction;
-
-    private InputAction jumpAction;
-
-    private InputAction crouchAction;
-
-    private InputAction attackAction;
-
-    private Vector3 velocity;
-
-    private float gravity = -9.81f;
-
-    [SerializeField] private float jumpForce = 5f;
-
-    [SerializeField] private float crouchHeight = 0.6f;
-
-    private float normalHeight = 2f;
-
-    private void Awake()
-
-    {
-
+    private void Awake()
+    {
         animator = GetComponent<Animator>();
 
-        // Get character controller if not assigned
+        if (characterController == null)
+            characterController = GetComponent<CharacterController>();
 
-        if (characterController == null)
+        if (playerCamera == null)
+            playerCamera = GetComponentInChildren<Camera>();
 
-            characterController = GetComponent<CharacterController>();
+        if (inputActions == null)
+            inputActions = Resources.Load<InputActionAsset>("InputSystem_Actions");
 
-        // Get camera if not assigned
+        if (inputActions == null)
+        {
+            Debug.LogError("PlayerMovement needs an InputActionAsset assigned.");
+            enabled = false;
+            return;
+        }
 
-        if (playerCamera == null)
+        playerActionMap = inputActions.FindActionMap("Player", true);
+        moveAction = playerActionMap.FindAction("Move", true);
+        sprintAction = playerActionMap.FindAction("Sprint", true);
+        jumpAction = playerActionMap.FindAction("Jump", true);
+        crouchAction = playerActionMap.FindAction("Crouch", true);
+        attackAction = playerActionMap.FindAction("Attack", true);
 
-            playerCamera = GetComponentInChildren<Camera>();
+        if (characterController != null)
+            normalHeight = characterController.height;
+    }
 
-        // Setup input system
+    private void OnEnable()
+    {
+        if (playerActionMap == null)
+            return;
 
-        if (inputActions == null)
+        playerActionMap.Enable();
+        jumpAction.performed += OnJump;
+        crouchAction.performed += OnCrouch;
+        crouchAction.canceled += OnStopCrouch;
+        attackAction.performed += OnAttack;
+    }
 
-            inputActions = Resources.Load<InputActionAsset>("InputSystem_Actions");
+    private void OnDisable()
+    {
+        if (playerActionMap == null)
+            return;
 
-        playerActionMap = inputActions.FindActionMap("Player");
-
-        moveAction = playerActionMap.FindAction("Move");
-
-        sprintAction = playerActionMap.FindAction("Sprint");
-
-        jumpAction = playerActionMap.FindAction("Jump");
-
-        crouchAction = playerActionMap.FindAction("Crouch");
-
-        attackAction = playerActionMap.FindAction("Attack");
-
-        // Store normal height
-
-        normalHeight = characterController.height;
-
-    }
-
-    private void OnEnable()
-
-    {
-
-        playerActionMap.Enable();
-
-        // Subscribe to input actions
-
-        jumpAction.performed += OnJump;
-
-        crouchAction.performed += OnCrouch;
-
-        crouchAction.canceled += OnStopCrouch;
-
-        attackAction.performed += OnAttack;
-
-    }
-
-    private void OnDisable()
-
-    {
-
-        playerActionMap.Disable();
-
-        jumpAction.performed -= OnJump;
-
-        crouchAction.performed -= OnCrouch;
-
-        crouchAction.canceled -= OnStopCrouch;
-
-        attackAction.performed -= OnAttack;
-
-    }
+        jumpAction.performed -= OnJump;
+        crouchAction.performed -= OnCrouch;
+        crouchAction.canceled -= OnStopCrouch;
+        attackAction.performed -= OnAttack;
+        playerActionMap.Disable();
+    }
 
     private void Update()
     {
-        animator.SetLayerWeight(0, 1f);
+        if (characterController == null)
+            return;
+
+        if (animator != null)
+            animator.SetLayerWeight(0, 1f);
 
         HandleMovement();
-        animator.SetBool("isMoving", isMoving);
-        animator.SetFloat("currentSpeed", currentSpeed);
+
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", isMoving);
+            animator.SetFloat("currentSpeed", currentSpeed);
+        }
+
         HandleFootsteps();
         ApplyGravity();
-
         characterController.Move(velocity * Time.deltaTime);
 
-        // Reset jump state when grounded again
         if (characterController.isGrounded && isJumping && velocity.y <= 0)
-        {
             isJumping = false;
-        }
-        if (characterController.isGrounded)
-        {
-            groundedTimer = 0.15f;
-        }
-        else
-        {
-            groundedTimer -= Time.deltaTime;
-        }
+
+        groundedTimer = characterController.isGrounded
+            ? 0.15f
+            : groundedTimer - Time.deltaTime;
     }
+
     private void HandleMovement()
     {
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
-
         isMoving = moveInput.magnitude > 0.1f;
-
         isSprinting = sprintAction.IsPressed();
 
-        Vector3 moveDirection =
-            transform.forward * moveInput.y +
-            transform.right * moveInput.x;
-
-        currentSpeed = isMoving
-            ? moveSpeed * (isSprinting ? sprintMultiplier : 1f)
-            : 0f;
+        Vector3 moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
+        currentSpeed = isMoving ? moveSpeed * (isSprinting ? sprintMultiplier : 1f) : 0f;
 
         velocity.x = moveDirection.x * currentSpeed;
         velocity.z = moveDirection.z * currentSpeed;
     }
 
     private void ApplyGravity()
-
-    {
-
-        if (characterController.isGrounded && velocity.y < 0)
-
-        {
-
-            velocity.y = -2f; // Small negative value to keep grounded
-
-        }
-
-        else
-
-        {
-
-            velocity.y += gravity * Time.deltaTime;
-
-        }
-
-    }
+    {
+        if (characterController.isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
+    }
 
     private void OnJump(InputAction.CallbackContext context)
     {
@@ -204,62 +161,88 @@ public class PlayerMovement : MonoBehaviour
 
         isJumping = true;
 
-        animator.SetTrigger("Jumping");
+        if (animator != null)
+            animator.SetTrigger("Jumping");
 
-        SFXManager.Instance.PlaySound("Jump");
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySound("Jump");
 
         velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-
         groundedTimer = 0f;
     }
 
     private void HandleFootsteps()
     {
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
+        bool isWalking = groundedTimer > 0f && moveInput.magnitude > 0.1f;
 
-        bool isWalking =
-            groundedTimer > 0f &&
-            moveInput.magnitude > 0.1f;
-
-        if (isWalking)
-        {
-            float currentInterval =
-                isSprinting ? sprintFootstepInterval : footstepInterval;
-
-            footstepTimer += Time.deltaTime;
-
-            if (footstepTimer >= currentInterval)
-            {
-                SFXManager.Instance.PlaySound("Footstep");
-                footstepTimer = 0f;
-            }
-        }
-        else
+        if (!isWalking)
         {
             footstepTimer = 0f;
+            return;
         }
+
+        float currentInterval = isSprinting ? sprintFootstepInterval : footstepInterval;
+        footstepTimer += Time.deltaTime;
+
+        if (footstepTimer < currentInterval)
+            return;
+
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlaySound("Footstep");
+
+        footstepTimer = 0f;
     }
 
     private void OnCrouch(InputAction.CallbackContext context)
+    {
+        if (characterController != null)
+            characterController.height = crouchHeight;
+    }
 
-    {
+    private void OnStopCrouch(InputAction.CallbackContext context)
+    {
+        if (characterController != null)
+            characterController.height = normalHeight;
+    }
 
-        characterController.height = crouchHeight;
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        ShootProjectile();
+    }
 
-    }
+    private void ShootProjectile()
+    {
+        if (Time.time < nextShootTime)
+            return;
 
-    private void OnStopCrouch(InputAction.CallbackContext context)
+        if (projectilePrefab == null)
+        {
+            Debug.LogWarning("PlayerMovement needs a projectile prefab assigned before the player can shoot.");
+            return;
+        }
 
-    {
+        Transform spawnTransform = firePoint != null
+            ? firePoint
+            : playerCamera != null
+                ? playerCamera.transform
+                : transform;
 
-        characterController.height = normalHeight;
+        Vector3 shootDirection = spawnTransform.forward.normalized;
+        Vector3 spawnPosition = spawnTransform.position + shootDirection * projectileSpawnOffset;
+        GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.LookRotation(shootDirection));
 
-    }
-private void OnAttack(InputAction.CallbackContext context)
+        bullet projectileDamageScript = projectile.GetComponent<bullet>();
+        if (projectileDamageScript != null)
+            projectileDamageScript.ConfigureForEnemies(projectileDamage);
 
-    {
+        Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+        if (projectileRb != null)
+        {
+            projectileRb.useGravity = false;
+            projectileRb.linearVelocity = shootDirection * projectileSpeed;
+        }
 
-        
-
-    }
+        nextShootTime = Time.time + shootCooldown;
+    }
 }

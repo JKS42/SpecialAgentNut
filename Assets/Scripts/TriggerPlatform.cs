@@ -12,6 +12,10 @@ public class TriggerPlatform : MonoBehaviour
     {
         shouldMove = true;
     }
+    public void ActivatePlatformBack()
+    {
+        shouldMove = true;
+    }
 
     void Update()
     {
@@ -22,5 +26,14 @@ public class TriggerPlatform : MonoBehaviour
             pointB.position,
             moveSpeed * Time.deltaTime
         );
+
+        if(transform.position == pointB.position)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                pointA.position,
+                moveSpeed * Time.deltaTime
+            );
+        }
     }
 }

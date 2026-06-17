@@ -6,16 +6,27 @@ public class EnemyPatrol : MonoBehaviour
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private float detectionRadius = 8f;
+    [SerializeField] private int maxHealth = 30;
+    [SerializeField] private float rotationSpeed = 720f;
 
     public WaypointLinkedList waypoints = new WaypointLinkedList();
     private WaypointNode currentNode;
     private NavMeshAgent agent;
     private PlayerRespawn currentTarget;
     private float nextAttackTime;
+    private int currentHealth;
 
     void Start()
     {
+        currentHealth = maxHealth;
         agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.updateRotation = false;
+        }
+
+        transform.Rotate(0f, 180f, 0f);
+
         currentTarget = Object.FindFirstObjectByType<PlayerRespawn>();
 
         WaypointManager waypointManager = Object.FindFirstObjectByType<WaypointManager>();
@@ -46,6 +57,7 @@ public class EnemyPatrol : MonoBehaviour
             {
                 agent.isStopped = false;
                 agent.SetDestination(currentTarget.transform.position);
+                FaceMovementDirection();
 
                 if (Time.time >= nextAttackTime)
                 {
@@ -59,6 +71,7 @@ public class EnemyPatrol : MonoBehaviour
 
         agent.isStopped = false;
         UpdateTarget();
+        FaceMovementDirection();
     }
 
     void UpdateTarget()
@@ -80,6 +93,38 @@ public class EnemyPatrol : MonoBehaviour
 
         currentTarget.TakeDamage(attackDamage);
         SFXManager.Instance.PlaySound("EnemyAttack");
+    }
+
+    private void FaceMovementDirection()
+    {
+        if (agent == null)
+        {
+            return;
+        }
+
+        Vector3 direction = agent.desiredVelocity.sqrMagnitude > 0.01f
+            ? agent.desiredVelocity
+            : agent.velocity;
+
+        direction.y = 0f;
+        if (direction.sqrMagnitude <= 0.01f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+        Debug.Log("Enemy Patrol takes " + amount + " damage!");
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     

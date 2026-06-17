@@ -7,10 +7,15 @@ public class BossBehavior : MonoBehaviour
     [Header("References")]
     public Transform player;
     public List<Transform> waypoints = new List<Transform>();
+    [SerializeField] private Animator animator;
+    [SerializeField] private string animatorSpeedParameter = "currentSpeed";
+    [SerializeField] private string attackTriggerParameter = "isAttacking";
     
 
     [Header("BossStats")]
-    public float moveSpeed = 5f;
+    public float patrolSpeed = 4f;
+    public float moveSpeed = 8f;
+    public float rotationSpeed = 720f;
     public float maxHealth = 100f;
     public float currentHealth;
     public float patrolPointStopDistance = 0.5f;
@@ -43,6 +48,7 @@ public class BossBehavior : MonoBehaviour
     private List<GraphNode> graphPatrolPath = new List<GraphNode>();
     private int graphPathIndex;
     private NavMeshAgent navAgent;
+    private Vector3 lastFramePosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,12 +56,16 @@ public class BossBehavior : MonoBehaviour
     }
     private void Awake()
     {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
         navAgent = GetComponent<NavMeshAgent>();
         if (navAgent != null)
         {
             navAgent.speed = moveSpeed;
             navAgent.stoppingDistance = patrolPointStopDistance;
             navAgent.autoTraverseOffMeshLink = true;
+            navAgent.updateRotation = false;
 
             if (!navAgent.isOnNavMesh && NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
@@ -63,14 +73,55 @@ public class BossBehavior : MonoBehaviour
             }
         }
 
+        // Auto-find player if not assigned
+        if (player == null)
+        {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+            {
+                player = playerObject.transform;
+            }
+        }
+
         currentHealth = maxHealth;
+        lastFramePosition = transform.position;
         BuildDecisionTree();
         RefreshGraphPatrolPath();
+    }
+
+    private bool HasAnimatorParameter(string parameterName, AnimatorControllerParameterType parameterType)
+    {
+        if (animator == null || string.IsNullOrEmpty(parameterName))
+            return false;
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.name == parameterName && parameter.type == parameterType)
+                return true;
+        }
+
+        return false;
+    }
+
+    private void LateUpdate()
+    {
+        UpdateAnimatorSpeed();
+        FaceNavAgentMovementDirection();
+        lastFramePosition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsPlayerDetected())
+        {
+            ReturnToPatrolState();
+            currentDecision = "Patrol";
+            gizmoColor = Color.green;
+            Patrol();
+            return;
+        }
+
         string decision = EvaluateDecisionTree(rootNode);
         currentDecision = decision;
 
@@ -96,6 +147,39 @@ public class BossBehavior : MonoBehaviour
                 gizmoColor = Color.white;
                 break;
         }
+    }
+    private bool IsPlayerDetected()
+    {
+        return player != null && DistanceToPlayer() <= detectionRange;
+    }
+    private void ReturnToPatrolState()
+    {
+        attackTimer = 0f;
+
+        if (navAgent != null && navAgent.isOnNavMesh)
+        {
+            navAgent.isStopped = false;
+            navAgent.stoppingDistance = patrolPointStopDistance;
+            navAgent.ResetPath();
+        }
+    }
+    private void UpdateAnimatorSpeed()
+    {
+        if (animator == null || string.IsNullOrEmpty(animatorSpeedParameter))
+            return;
+
+        float speed = 0f;
+
+        if (navAgent != null && navAgent.isOnNavMesh)
+        {
+            speed = navAgent.velocity.magnitude;
+        }
+        else
+        {
+            speed = (transform.position - lastFramePosition).magnitude / Mathf.Max(Time.deltaTime, 0.0001f);
+        }
+
+        animator.SetFloat(animatorSpeedParameter, speed);
     }
     private void BuildDecisionTree()
     {
@@ -167,7 +251,7 @@ public class BossBehavior : MonoBehaviour
         }
 
         // Move to the patrol point
-        MoveTowards(targetPosition, moveSpeed);
+        MoveTowards(targetPosition, patrolSpeed);
     }
     private void PatrolUsingNavMeshWaypoints()
     {
@@ -241,7 +325,7 @@ public class BossBehavior : MonoBehaviour
             targetPosition = new Vector3(targetNode.transform.position.x, transform.position.y, targetNode.transform.position.z);
         }
 
-        MoveTowards(targetPosition, moveSpeed);
+        MoveTowards(targetPosition, patrolSpeed);
         return true;
     }
     private void RefreshGraphPatrolPath()
@@ -296,6 +380,11 @@ public class BossBehavior : MonoBehaviour
         // Handle attack cooldown
         if (attackTimer <= 0f)
         {
+            if (HasAnimatorParameter(attackTriggerParameter, AnimatorControllerParameterType.Trigger))
+            {
+                animator.SetTrigger(attackTriggerParameter);
+            }
+
             // Deal damage to player
             PlayerRespawn playerHealth = player.GetComponent<PlayerRespawn>();
             if (playerHealth != null)
@@ -386,6 +475,28 @@ public class BossBehavior : MonoBehaviour
             transform.forward = direction;
         }
     }
+
+    private void FaceNavAgentMovementDirection()
+    {
+        if (navAgent == null || !navAgent.isOnNavMesh || navAgent.isStopped)
+        {
+            return;
+        }
+
+        Vector3 direction = navAgent.desiredVelocity.sqrMagnitude > 0.01f
+            ? navAgent.desiredVelocity
+            : navAgent.velocity;
+
+        direction.y = 0f;
+        if (direction.sqrMagnitude <= 0.01f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction.normalized);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
     private float DistanceToPlayer()
     {
         if (player == null)
@@ -396,6 +507,18 @@ public class BossBehavior : MonoBehaviour
 
         return Vector3.Distance(a, b);
     }
+
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
+        Debug.Log("Boss takes " + amount + " damage!");
+
+        if (currentHealth <= 0f)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         // Blue circle = detection range
